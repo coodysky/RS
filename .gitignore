@@ -1,5 +1,8 @@
 MsForCustomer/bin/
 MsForCustomer/obj/
+CommonProjects/GenDbModel/bin/
+CommonProjects/GenDbModel/obj/
+/CMDS/*
 packages/
 *.user
 .vs
