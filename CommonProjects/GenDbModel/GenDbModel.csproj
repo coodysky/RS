@@ -80,7 +80,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>copy GenDbModel.exe /y $(SolutionDir)CMDS\GenDbModel.exe
+    <PostBuildEvent>rd /s /q $(SolutionDir)CMDS
+md $(SolutionDir)CMDS
+copy GenDbModel.exe /y $(SolutionDir)CMDS\GenDbModel.exe
 copy GenDbModel.exe.config /y $(SolutionDir)CMDS\GenDbModel.exe.config</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
