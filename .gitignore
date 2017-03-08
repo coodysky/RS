@@ -1,5 +1,7 @@
 MsForCustomer/bin/
 MsForCustomer/obj/
+DbModel/bin/
+DbModel/obj/
 CommonProjects/GenDbModel/bin/
 CommonProjects/GenDbModel/obj/
 /CMDS/*
