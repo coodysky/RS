@@ -13,6 +13,10 @@ namespace Gen.Model
         public string Db { get; set; }
         [YamlMember(Alias = "connectionString", ApplyNamingConventions = false)]
         public string ConnectionString { get; set; }
+        [YamlMember(Alias = "dbModelPath", ApplyNamingConventions = false)]
+        public string DbModelPath { get; set; }
+        [YamlMember(Alias = "nameSpace", ApplyNamingConventions = false)]
+        public string NameSpace { get; set; }
         [YamlMember(Alias = "tables", ApplyNamingConventions = false)]
         public List<string> Tables { get; set; }
     }

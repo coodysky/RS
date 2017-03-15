@@ -1,5 +1,7 @@
 db: 'MsSql'
 connectionString: 'Data Source=192.168.199.66;Initial Catalog=Pro;UID=manager;PWD=65ezbuy@nicemanager;'
+dbModelPath: 'Ms/DbModel'
+nameSpace: ''
 tables:
  - Customer
  - Order
