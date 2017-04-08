@@ -16,111 +16,124 @@ namespace Gen
     {
         private static void Main(string[] args)
         {
-            //string[] folders = Directory.GetDirectories("../MicroServices");
-            string[] folders = Directory.GetDirectories("D:/Coody/Projects/RS/MicroServices");
-
-            foreach (var folder in folders)
+            try
             {
-                string fileName = folder + "/Ms/conf.yaml";
-                if (File.Exists(fileName))
+                //string[] folders = Directory.GetDirectories("../MicroServices");
+                string[] folders = Directory.GetDirectories("D:/Coody/Projects/RS/MicroServices");
+
+                foreach (var folder in folders)
                 {
-                    string yamlText = File.ReadAllText(fileName);
+                    string fileName = folder + "/Ms/conf.yaml";
 
-                    var input = new StringReader(yamlText);
+                    Console.WriteLine(string.Format("conf.yaml[{0}]", fileName));
 
-                    var deserializer = new DeserializerBuilder()
-                        .WithNamingConvention(new CamelCaseNamingConvention())
-                        .Build();
-
-                    var confYaml = deserializer.Deserialize<ConfYaml>(input);
-
-
-
-                    foreach (string tableName in confYaml.Tables)
+                    if (File.Exists(fileName))
                     {
-                        using (var conn = new SqlConnection(confYaml.ConnectionString))
+                        string yamlText = File.ReadAllText(fileName);
+
+                        var input = new StringReader(yamlText);
+
+                        var deserializer = new DeserializerBuilder()
+                            .WithNamingConvention(new CamelCaseNamingConvention())
+                            .Build();
+
+                        var confYaml = deserializer.Deserialize<ConfYaml>(input);
+
+                        foreach (string tableName in confYaml.Tables)
                         {
-                            string sql = string.Format("EXEC SP_HELP '{0}'", tableName);
-                            var s = conn.QueryMultiple(sql);
-                            s.Read(); //第一个结果忽略不要
-                            List<TableDesc> columns = s.Read<TableDesc>().ToList();
-
-                            if (columns.Count > 0)
+                            using (var conn = new SqlConnection(confYaml.ConnectionString))
                             {
-                                StringBuilder sb = new StringBuilder();
-                                sb.AppendFormat("using System;\n");
-                                sb.AppendFormat("using System.Collections.Generic;\n");
-                                sb.AppendFormat("using System.Linq;\n");
-                                sb.AppendFormat("using System.Text;\n");
-                                sb.AppendFormat("\n");
-                                sb.AppendFormat("namespace {0}\n", string.IsNullOrEmpty(confYaml.NameSpace) ? "Ms.DbModel": confYaml.NameSpace);
-                                sb.AppendFormat("{{\n");
-                                sb.AppendFormat("    public class {0}\n", tableName);
-                                sb.AppendFormat("    {{\n");
-                                foreach (TableDesc column in columns)
-                                {
-                                    string type = "";
+                                string sql = string.Format("EXEC SP_HELP '{0}'", tableName);
+                                var s = conn.QueryMultiple(sql);
+                                s.Read(); //第一个结果忽略不要
+                                List<TableDesc> columns = s.Read<TableDesc>().ToList();
 
-                                    if (column.Type.ToLower() == "varchar" || column.Type.ToLower() == "nvarchar" ||
-                                        column.Type.ToLower() == "char")
+                                if (columns.Count > 0)
+                                {
+                                    StringBuilder sb = new StringBuilder();
+                                    sb.AppendFormat("using System;\n");
+                                    sb.AppendFormat("using System.Collections.Generic;\n");
+                                    sb.AppendFormat("using System.Linq;\n");
+                                    sb.AppendFormat("using System.Text;\n");
+                                    sb.AppendFormat("\n");
+                                    sb.AppendFormat("namespace {0}\n",
+                                        string.IsNullOrEmpty(confYaml.NameSpace) ? "Ms.DbModel" : confYaml.NameSpace);
+                                    sb.AppendFormat("{{\n");
+                                    sb.AppendFormat("    public class {0}\n", tableName);
+                                    sb.AppendFormat("    {{\n");
+                                    foreach (TableDesc column in columns)
                                     {
-                                        type += "string";
-                                    }
-                                    else
-                                    {
-                                        switch (column.Type.ToLower())
+                                        string type = "";
+
+                                        if (column.Type.ToLower() == "varchar" || column.Type.ToLower() == "nvarchar" ||
+                                            column.Type.ToLower() == "char")
                                         {
-                                            case "int":
-                                                type += "int";
-                                                break;
-                                            case "bigint":
-                                                type += "long";
-                                                break;
-                                            case "float":
-                                                type += "float";
-                                                break;
-                                            case "double":
-                                                type += "double";
-                                                break;
-                                            case "datetime":
-                                                type += "DateTime";
-                                                break;
-                                            case "money":
-                                            case "decimal":
-                                                type += "decimal";
-                                                break;
-                                            case "bit":
-                                                type += "bool";
-                                                break;
+                                            type += "string";
+                                        }
+                                        else
+                                        {
+                                            switch (column.Type.ToLower())
+                                            {
+                                                case "int":
+                                                    type += "int";
+                                                    break;
+                                                case "bigint":
+                                                    type += "long";
+                                                    break;
+                                                case "float":
+                                                    type += "float";
+                                                    break;
+                                                case "double":
+                                                    type += "double";
+                                                    break;
+                                                case "datetime":
+                                                    type += "DateTime";
+                                                    break;
+                                                case "money":
+                                                case "decimal":
+                                                    type += "decimal";
+                                                    break;
+                                                case "bit":
+                                                    type += "bool";
+                                                    break;
+                                            }
+
+                                            if (column.Nullable.ToLower() == "yes")
+                                            {
+                                                type += "?";
+                                            }
                                         }
 
-                                        if (column.Nullable.ToLower() == "yes")
-                                        {
-                                            type += "?";
-                                        }
+                                        sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
+                                            column.Column_name);
+                                    }
+                                    sb.AppendFormat("    }}\n");
+                                    sb.AppendFormat("}}\n");
+
+                                    string dbModelPath = string.Format("{0}/{1}", folder, confYaml.DbModelPath);
+                                    if (!Directory.Exists(dbModelPath))
+                                    {
+                                        Directory.CreateDirectory(dbModelPath);
                                     }
 
-                                    sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type, column.Column_name);
-                                }
-                                sb.AppendFormat("    }}\n");
-                                sb.AppendFormat("}}\n");
-
-                                string dbModelPath = string.Format("{0}/{1}", folder, confYaml.DbModelPath);
-                                if (!Directory.Exists(dbModelPath))
-                                {
-                                    Directory.CreateDirectory(dbModelPath);
+                                    string modelFileName = string.Format("{0}/{1}.cs", dbModelPath, tableName);
+                                    File.WriteAllText(modelFileName, sb.ToString());
                                 }
 
-                                string modelFileName = string.Format("{0}/{1}.cs", dbModelPath, tableName);
-                                File.WriteAllText(modelFileName, sb.ToString());
+                                Console.WriteLine(string.Format("生成Table[{0}]完成", tableName));
                             }
                         }
-                    }
 
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
 
-            Console.ReadLine();
+            Console.WriteLine("请按任意键退出");
+            Console.ReadKey();
         }
     }
 }
