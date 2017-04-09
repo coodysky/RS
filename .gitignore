@@ -2,6 +2,8 @@ bin/
 obj/
 MicroServices/Customer/Ms/bin/
 MicroServices/Customer/Ms/obj/
+MicroServices/Requirement/Ms/bin/
+MicroServices/Requirement/Ms/obj/
 CommonProjects/Gen/bin/
 CommonProjects/Gen/obj/
 CMDS/*

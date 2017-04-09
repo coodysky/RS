@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{48D8A3B4-43FF-4341-8B92-B2FBCBC72A8C}</ProjectGuid>
+    <ProjectGuid>{324F37A2-3DD3-48C7-971D-60524E4BD729}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Ms</RootNamespace>
@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Dapper.1.50.2\lib\net451\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="MicroService4Net, Version=2.0.5948.28056, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\MicroService4Net.2.0.5948.28056\lib\net45\MicroService4Net.dll</HintPath>
       <Private>True</Private>
@@ -62,6 +66,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
@@ -87,9 +92,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiModel\Requirement.cs" />
+    <Compile Include="ApiModel\RespEntity.cs" />
     <Compile Include="DbModel\Customer.cs" />
-    <Compile Include="DbModel\CustomerAddress.cs" />
-    <Compile Include="ExampleController.cs" />
+    <Compile Include="DbModel\Requirement.cs" />
+    <Compile Include="DbModel\RequirementImage.cs" />
+    <Compile Include="RequirementController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

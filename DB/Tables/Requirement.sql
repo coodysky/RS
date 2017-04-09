@@ -1,15 +1,16 @@
 CREATE TABLE Requirement
 (
     RequirementId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,--主键自增
+	CustomerId INT NOT NULL,--用户Id
     Title NVARCHAR(50) NOT NULL,--标题
     Content NVARCHAR(MAX) NOT NULL,--内容
-    Address NVARCHAR(1000) NOT NULL,--需求地址
-    Longitude NVARCHAR(20) NOT NULL,--经度
-    Latitude NVARCHAR(20) NOT NULL,--纬度
-    ContactPhone NVARCHAR(20) NOT NULL,--联系电话
-    ContactMan NVARCHAR(50) NOT NULL,--联系人
+    Address NVARCHAR(1000) NULL,--需求地址
+    Longitude NVARCHAR(20) NULL,--经度
+    Latitude NVARCHAR(20) NULL,--纬度
+    ContactPhone NVARCHAR(20) NULL,--联系电话
+    ContactMan NVARCHAR(50) NULL,--联系人
     RequirementStatusCode NVARCHAR(20) NOT NULL,--需求状态
-    ReleaseDate DATETIME NOT NULL,--发布时间
+    ReleaseDate DATETIME NULL,--发布时间
     CreateBy NVARCHAR(50) NOT NULL,--创建人
     CreateDate DATETIME NOT NULL DEFAULT ( GETDATE() ),--创建时间
     UpdateBy NVARCHAR(50) NOT NULL,--更新人
@@ -24,6 +25,8 @@ ON Requirement (Title)
 GO
 
 EXEC sp_addextendedproperty N'MS_Description', N'主键Id，自增', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'RequirementId'
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'用户Id', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'CustomerId'
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'标题', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'Title'
 GO
