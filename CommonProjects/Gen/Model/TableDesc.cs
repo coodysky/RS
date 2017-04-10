@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Gen.Model
 {
-    class TableDesc
+    class ColumnDesc
     {
         public string Column_name { set; get; }
         public string Type { set; get; }

@@ -46,7 +46,7 @@ namespace Gen
                                 string sql = string.Format("EXEC SP_HELP '{0}'", tableName);
                                 var s = conn.QueryMultiple(sql);
                                 s.Read(); //第一个结果忽略不要
-                                List<TableDesc> columns = s.Read<TableDesc>().ToList();
+                                List<ColumnDesc> columns = s.Read<ColumnDesc>().ToList();
 
                                 if (columns.Count > 0)
                                 {
@@ -61,48 +61,9 @@ namespace Gen
                                     sb.AppendFormat("{{\n");
                                     sb.AppendFormat("    public class {0}\n", tableName);
                                     sb.AppendFormat("    {{\n");
-                                    foreach (TableDesc column in columns)
+                                    foreach (ColumnDesc column in columns)
                                     {
-                                        string type = "";
-
-                                        if (column.Type.ToLower() == "varchar" || column.Type.ToLower() == "nvarchar" ||
-                                            column.Type.ToLower() == "char")
-                                        {
-                                            type += "string";
-                                        }
-                                        else
-                                        {
-                                            switch (column.Type.ToLower())
-                                            {
-                                                case "int":
-                                                    type += "int";
-                                                    break;
-                                                case "bigint":
-                                                    type += "long";
-                                                    break;
-                                                case "float":
-                                                    type += "float";
-                                                    break;
-                                                case "double":
-                                                    type += "double";
-                                                    break;
-                                                case "datetime":
-                                                    type += "DateTime";
-                                                    break;
-                                                case "money":
-                                                case "decimal":
-                                                    type += "decimal";
-                                                    break;
-                                                case "bit":
-                                                    type += "bool";
-                                                    break;
-                                            }
-
-                                            if (column.Nullable.ToLower() == "yes")
-                                            {
-                                                type += "?";
-                                            }
-                                        }
+                                        string type = getType(column);
 
                                         sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
                                             column.Column_name);
@@ -134,6 +95,52 @@ namespace Gen
 
             Console.WriteLine("请按任意键退出");
             Console.ReadKey();
+        }
+
+        private static string getType(ColumnDesc column)
+        {
+            string type = "";
+
+            if (column.Type.ToLower() == "varchar" || column.Type.ToLower() == "nvarchar" ||
+                column.Type.ToLower() == "char")
+            {
+                type += "string";
+            }
+            else
+            {
+                switch (column.Type.ToLower())
+                {
+                    case "int":
+                        type += "int";
+                        break;
+                    case "bigint":
+                        type += "long";
+                        break;
+                    case "float":
+                        type += "float";
+                        break;
+                    case "double":
+                        type += "double";
+                        break;
+                    case "datetime":
+                        type += "DateTime";
+                        break;
+                    case "money":
+                    case "decimal":
+                        type += "decimal";
+                        break;
+                    case "bit":
+                        type += "bool";
+                        break;
+                }
+
+                if (column.Nullable.ToLower() == "yes")
+                {
+                    type += "?";
+                }
+            }
+
+            return type;
         }
     }
 }
