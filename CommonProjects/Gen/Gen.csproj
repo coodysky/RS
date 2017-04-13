@@ -52,7 +52,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ConfYaml.cs" />
-    <Compile Include="Model\TableDesc.cs" />
+    <Compile Include="Model\IdentityColumn.cs" />
+    <Compile Include="Model\ColumnDesc.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

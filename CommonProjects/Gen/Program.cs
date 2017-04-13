@@ -47,6 +47,7 @@ namespace Gen
                                 var s = conn.QueryMultiple(sql);
                                 s.Read(); //第一个结果忽略不要
                                 List<ColumnDesc> columns = s.Read<ColumnDesc>().ToList();
+                                List<IdentityColumn> identityColumns = s.Read<IdentityColumn>().ToList();
 
                                 if (columns.Count > 0)
                                 {
@@ -68,6 +69,9 @@ namespace Gen
                                         sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
                                             column.Column_name);
                                     }
+
+                                    getSqlForInsert(sb, tableName, columns, identityColumns);
+                                    
                                     sb.AppendFormat("    }}\n");
                                     sb.AppendFormat("}}\n");
 
@@ -141,6 +145,95 @@ namespace Gen
             }
 
             return type;
+        }
+
+        private static void getSqlForInsert(StringBuilder sb,string tableName, List<ColumnDesc> columns, List<IdentityColumn> identityColumns)
+        {
+            if (columns != null && columns.Count > 0)
+            {
+                sb.AppendFormat("\n        public static string GetSqlForInsert({0} {1})", tableName, tableName.ToLower());
+                sb.AppendFormat("\n        {{");
+                sb.AppendFormat("\n            string sql = string.Empty;\n");
+                sb.AppendFormat("\n            Dictionary<string, string> dicNameValue = new Dictionary<string, string>();\n");
+
+                foreach (ColumnDesc column in columns)
+                {
+                    bool isExist = false;
+                    if (identityColumns != null && identityColumns.Count > 0)
+                    {
+                        foreach (IdentityColumn identityColumn in identityColumns)
+                        {
+                            if (column.Column_name.Equals(identityColumn.Identity, StringComparison.OrdinalIgnoreCase))
+                            {
+                                isExist = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (!isExist)
+                    {
+                        if (column.Nullable.ToLower() == "yes")
+                        {
+                            sb.AppendFormat("\n            if ({0}.{1} != null)", tableName.ToLower(), column.Column_name);
+                            sb.AppendFormat("\n            {{");
+
+                            if (getType(column) == "bool?")
+                            {
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                            else if (getType(column) == "DateTime?")
+                            {
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                            else
+                            {
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+
+                            sb.AppendFormat("\n            }}");
+                        }
+                        else
+                        {
+                            if (getType(column) == "string")
+                            {
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ?? \"\");", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                            else if (getType(column) == "bool")
+                            {
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                            else if (getType(column) == "DateTime")
+                            {
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                            else
+                            {
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, tableName.ToLower(), column.Column_name);
+                            }
+                        }
+                    }
+                }
+
+                sb.AppendFormat("\n            StringBuilder sql1 = new StringBuilder();");
+                sb.AppendFormat("\n            StringBuilder sql2 = new StringBuilder();");
+                sb.AppendFormat("\n            foreach (var nameValue in dicNameValue)");
+                sb.AppendFormat("\n            {{");
+                sb.AppendFormat("\n                sql1.AppendFormat(\"[{{0}}],\", nameValue.Key);");
+                sb.AppendFormat("\n                sql2.AppendFormat(\"'{{0}}',\", nameValue.Value);");
+                sb.AppendFormat("\n            }}");
+                sb.AppendFormat("\n            ");
+                sb.AppendFormat("\n            if (!string.IsNullOrEmpty(sql1.ToString()) && !string.IsNullOrEmpty(sql2.ToString()))");
+                sb.AppendFormat("\n            {{");
+                sb.AppendFormat("\n                sql = \"INSERT INTO[{0}](\";", tableName);
+                sb.AppendFormat("\n                sql += sql1.ToString().Trim((',')) + \") VALUES(\";");
+                sb.AppendFormat("\n                sql += sql2.ToString().Trim((',')) + \")\";");
+                sb.AppendFormat("\n            }}");
+                sb.AppendFormat("\n            ");
+                sb.AppendFormat("\n            return sql;");
+
+                sb.AppendFormat("\n        }}\n");
+            }
         }
     }
 }
