@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Model\ConfYaml.cs" />
+    <Compile Include="Model\Constraint.cs" />
     <Compile Include="Model\IdentityColumn.cs" />
     <Compile Include="Model\ColumnDesc.cs" />
     <Compile Include="Program.cs" />

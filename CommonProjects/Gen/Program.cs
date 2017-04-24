@@ -48,6 +48,10 @@ namespace Gen
                                 s.Read(); //第一个结果忽略不要
                                 List<ColumnDesc> columns = s.Read<ColumnDesc>().ToList();
                                 List<IdentityColumn> identityColumns = s.Read<IdentityColumn>().ToList();
+                                s.Read();
+                                s.Read();
+                                s.Read();
+                                List<Constraint> constraints = s.Read<Constraint>().ToList();
 
                                 if (columns.Count > 0)
                                 {
@@ -71,7 +75,10 @@ namespace Gen
                                     }
 
                                     getSqlForInsert(sb, tableName, columns, identityColumns);
-                                    
+                                    sb.AppendFormat("        \n");
+                                    getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
+                                    sb.AppendFormat("        \n");
+
                                     sb.AppendFormat("    }}\n");
                                     sb.AppendFormat("}}\n");
 
@@ -234,6 +241,57 @@ namespace Gen
 
                 sb.AppendFormat("\n        }}\n");
             }
+        }
+
+        private static void getSqlForSelectPrimaryKeys(StringBuilder sb, List<Constraint> constraints, List<ColumnDesc> columns, string tableName)
+        {
+            if (constraints == null || constraints.Count == 0)
+            {
+                return;
+            }
+            
+            var constraint = constraints.Find(x => x.constraint_type.ToLower().StartsWith("primary key"));
+
+            if (constraint == null)
+            {
+                return;
+            }
+
+            Dictionary<string, string> primaryKeysNameType = new Dictionary<string, string>();
+
+            foreach (var constraint_key in constraint.constraint_keys.Split(','))
+            {
+                var column = columns.Find(x => x.Column_name.ToLower() == constraint_key.Trim().ToLower());
+                string type = getType(column);
+                string name = column.Column_name;
+                primaryKeysNameType.Add(name, type);
+            }
+
+            if (primaryKeysNameType.Count > 0)
+            {
+                string sqlForParams = "";
+                string sqlForQuery = "";
+                string sqlForQueryValue = "";
+                int i = 0;
+                foreach (var nameType in primaryKeysNameType)
+                {
+                    sqlForParams += string.Format("{0} {1},", nameType.Value, nameType.Key);
+                    sqlForQuery += string.Format("{0} = N'{{{1}}}' AND", nameType.Key, i++);
+                    sqlForQueryValue += string.Format("{0},", nameType.Key);
+                }
+                if (sqlForParams != "")
+                    sqlForParams = sqlForParams.Trim(',');
+                if (sqlForQuery != "")
+                    sqlForQuery = sqlForQuery.Substring(0, sqlForQuery.Length - " AND".Length);
+                if (sqlForQueryValue != "")
+                    sqlForQueryValue = sqlForQueryValue.Trim(',');
+
+                sb.AppendFormat("\n        public static string GetSqlForSelectByPrimaryKeys({0})", sqlForParams);
+                sb.AppendFormat("\n        {{");
+                sb.AppendFormat("\n            return string.Format(\"SELECT TOP 1 * FROM [{0}] WITH(NOLOCK) WHERE {1}\", {2});",tableName, sqlForQuery, sqlForQueryValue);
+                sb.AppendFormat("\n        }}");
+            }
+            
         }
     }
 }

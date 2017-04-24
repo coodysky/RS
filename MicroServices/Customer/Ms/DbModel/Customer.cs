@@ -50,5 +50,11 @@ namespace Ms.DbModel
             
             return sql;
         }
+        
+
+        public static string GetSqlForSelectByPrimaryKeys(int CustomerId)
+        {
+            return string.Format("SELECT TOP 1 * FROM [Customer] WITH(NOLOCK) WHERE CustomerId = N'{0}'", CustomerId);
+        }        
     }
 }

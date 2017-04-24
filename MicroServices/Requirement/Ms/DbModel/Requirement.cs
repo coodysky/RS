@@ -78,5 +78,11 @@ namespace Ms.DbModel
             
             return sql;
         }
+        
+
+        public static string GetSqlForSelectByPrimaryKeys(int RequirementId)
+        {
+            return string.Format("SELECT TOP 1 * FROM [Requirement] WITH(NOLOCK) WHERE RequirementId = N'{0}'", RequirementId);
+        }        
     }
 }

@@ -46,5 +46,11 @@ namespace Ms.DbModel
             
             return sql;
         }
+        
+
+        public static string GetSqlForSelectByPrimaryKeys(int RequirementImageId)
+        {
+            return string.Format("SELECT TOP 1 * FROM [RequirementImage] WITH(NOLOCK) WHERE RequirementImageId = N'{0}'", RequirementImageId);
+        }        
     }
 }
