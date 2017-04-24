@@ -18,21 +18,21 @@ namespace Ms.DbModel
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public static string GetSqlForInsert(CustomerAddress customeraddress)
+        public string GetSqlForInsert()
         {
             string sql = string.Empty;
 
             Dictionary<string, string> dicNameValue = new Dictionary<string, string>();
 
-            dicNameValue.Add("CustomerId", customeraddress.CustomerId.ToString());
-            dicNameValue.Add("Address", customeraddress.Address ?? "");
-            dicNameValue.Add("Longitude", customeraddress.Longitude ?? "");
-            dicNameValue.Add("Latitude", customeraddress.Latitude ?? "");
-            dicNameValue.Add("IsDefault", customeraddress.IsDefault ? "1" : "0");
-            dicNameValue.Add("CreateBy", customeraddress.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", customeraddress.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            dicNameValue.Add("UpdateBy", customeraddress.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", customeraddress.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CustomerId", this.CustomerId.ToString());
+            dicNameValue.Add("Address", this.Address ?? "");
+            dicNameValue.Add("Longitude", this.Longitude ?? "");
+            dicNameValue.Add("Latitude", this.Latitude ?? "");
+            dicNameValue.Add("IsDefault", this.IsDefault ? "1" : "0");
+            dicNameValue.Add("CreateBy", this.CreateBy ?? "");
+            dicNameValue.Add("CreateDate", this.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateBy", this.UpdateBy ?? "");
+            dicNameValue.Add("UpdateDate", this.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

@@ -23,44 +23,44 @@ namespace Ms.DbModel
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public static string GetSqlForInsert(Requirement requirement)
+        public string GetSqlForInsert()
         {
             string sql = string.Empty;
 
             Dictionary<string, string> dicNameValue = new Dictionary<string, string>();
 
-            dicNameValue.Add("CustomerId", requirement.CustomerId.ToString());
-            dicNameValue.Add("Title", requirement.Title ?? "");
-            dicNameValue.Add("Content", requirement.Content ?? "");
-            if (requirement.Address != null)
+            dicNameValue.Add("CustomerId", this.CustomerId.ToString());
+            dicNameValue.Add("Title", this.Title ?? "");
+            dicNameValue.Add("Content", this.Content ?? "");
+            if (this.Address != null)
             {
-                dicNameValue.Add("Address", requirement.Address.ToString());
+                dicNameValue.Add("Address", this.Address.ToString());
             }
-            if (requirement.Longitude != null)
+            if (this.Longitude != null)
             {
-                dicNameValue.Add("Longitude", requirement.Longitude.ToString());
+                dicNameValue.Add("Longitude", this.Longitude.ToString());
             }
-            if (requirement.Latitude != null)
+            if (this.Latitude != null)
             {
-                dicNameValue.Add("Latitude", requirement.Latitude.ToString());
+                dicNameValue.Add("Latitude", this.Latitude.ToString());
             }
-            if (requirement.ContactPhone != null)
+            if (this.ContactPhone != null)
             {
-                dicNameValue.Add("ContactPhone", requirement.ContactPhone.ToString());
+                dicNameValue.Add("ContactPhone", this.ContactPhone.ToString());
             }
-            if (requirement.ContactMan != null)
+            if (this.ContactMan != null)
             {
-                dicNameValue.Add("ContactMan", requirement.ContactMan.ToString());
+                dicNameValue.Add("ContactMan", this.ContactMan.ToString());
             }
-            dicNameValue.Add("RequirementStatusCode", requirement.RequirementStatusCode ?? "");
-            if (requirement.ReleaseDate != null)
+            dicNameValue.Add("RequirementStatusCode", this.RequirementStatusCode ?? "");
+            if (this.ReleaseDate != null)
             {
-                dicNameValue.Add("ReleaseDate", requirement.ReleaseDate.ToString("yyyy-MM-dd HH:mm:ss"));
+                dicNameValue.Add("ReleaseDate", this.ReleaseDate.Value.ToString("yyyy-MM-dd HH:mm:ss"));
             }
-            dicNameValue.Add("CreateBy", requirement.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", requirement.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            dicNameValue.Add("UpdateBy", requirement.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", requirement.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CreateBy", this.CreateBy ?? "");
+            dicNameValue.Add("CreateDate", this.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateBy", this.UpdateBy ?? "");
+            dicNameValue.Add("UpdateDate", this.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

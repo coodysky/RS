@@ -34,53 +34,24 @@ namespace Ms
                     return new RespEntity() { Code = -1, Message = "用户不存在" };
                 }
 
-                string sqlForRequirementInsert = @"
-INSERT  INTO dbo.Requirement
-        ( CustomerId ,
-          Title ,
-          Content ,
-          Address ,
-          Longitude ,
-          Latitude ,
-          ContactPhone ,
-          ContactMan ,
-          RequirementStatusCode ,
-          ReleaseDate ,
-          CreateBy ,
-          CreateDate ,
-          UpdateBy ,
-          UpdateDate
-        )
-VALUES  ( @CustomerId ,
-          @Title ,
-          @Content ,
-          @Address ,
-          @Longitude ,
-          @Latitude ,
-          @ContactPhone ,
-          @ContactMan ,
-          N'Init' ,
-          NULL ,
-          @NickName ,
-          GETDATE() ,
-          @NickName ,
-          GETDATE()
-        )
-";
+                DbModel.Requirement modelRequirement = new DbModel.Requirement();
+                modelRequirement.CustomerId = customer.CustomerId;
+                modelRequirement.Title = requirement.Title;
+                modelRequirement.Content = requirement.Content;
+                modelRequirement.Address = requirement.Address;
+                modelRequirement.Latitude = requirement.Latitude;
+                modelRequirement.Longitude = requirement.Longitude;
+                modelRequirement.ContactPhone = requirement.ContactPhone;
+                modelRequirement.ContactMan = requirement.ContactMan;
+                modelRequirement.RequirementStatusCode = "Init";
+                modelRequirement.CreateBy = customer.NickName;
+                modelRequirement.UpdateBy = customer.NickName;
+                modelRequirement.CreateDate = DateTime.Now;
+                modelRequirement.UpdateDate = DateTime.Now;
 
-                conn.Execute(sqlForRequirementInsert,
-                    new
-                    {
-                        CustomerId = requirement.CustomerId,
-                        Title = requirement.Title,
-                        Content = requirement.Content,
-                        Address = requirement.Address,
-                        Longitude = requirement.Longitude,
-                        Latitude = requirement.Latitude,
-                        ContactPhone = requirement.ContactPhone,
-                        ContactMan = requirement.ContactMan,
-                        NickName = customer.NickName
-                    });
+                string sqlForRequirementInsert = modelRequirement.GetSqlForInsert();
+
+                conn.Execute(sqlForRequirementInsert);
             }
 
 
