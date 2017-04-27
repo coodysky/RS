@@ -49,7 +49,7 @@ namespace Ms
                 modelRequirement.CreateDate = DateTime.Now;
                 modelRequirement.UpdateDate = DateTime.Now;
 
-                string sqlForRequirementInsert = modelRequirement.GetSqlForInsert();
+                string sqlForRequirementInsert = DbModel.Requirement.GetSqlForInsert(modelRequirement);
 
                 conn.Execute(sqlForRequirementInsert);
             }

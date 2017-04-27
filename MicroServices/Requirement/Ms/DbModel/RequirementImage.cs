@@ -16,19 +16,19 @@ namespace Ms.DbModel
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public string GetSqlForInsert()
+        public static string GetSqlForInsert(RequirementImage requirementimage)
         {
             string sql = string.Empty;
 
             Dictionary<string, string> dicNameValue = new Dictionary<string, string>();
 
-            dicNameValue.Add("RequirementId", this.RequirementId.ToString());
-            dicNameValue.Add("ImageType", this.ImageType ?? "");
-            dicNameValue.Add("ImageUrl", this.ImageUrl ?? "");
-            dicNameValue.Add("CreateBy", this.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", this.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            dicNameValue.Add("UpdateBy", this.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", this.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("RequirementId", requirementimage.RequirementId.ToString());
+            dicNameValue.Add("ImageType", requirementimage.ImageType ?? "");
+            dicNameValue.Add("ImageUrl", requirementimage.ImageUrl ?? "");
+            dicNameValue.Add("CreateBy", requirementimage.CreateBy ?? "");
+            dicNameValue.Add("CreateDate", requirementimage.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateBy", requirementimage.UpdateBy ?? "");
+            dicNameValue.Add("UpdateDate", requirementimage.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

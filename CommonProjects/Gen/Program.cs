@@ -104,8 +104,8 @@ namespace Gen
                 Console.WriteLine(ex.Message);
             }
 
-            Console.WriteLine("请按任意键退出");
-            Console.ReadKey();
+            //Console.WriteLine("请按任意键退出");
+            //Console.ReadKey();
         }
 
         private static string getType(ColumnDesc column)
@@ -154,11 +154,11 @@ namespace Gen
             return type;
         }
 
-        private static void getSqlForInsert(StringBuilder sb,string tableName, List<ColumnDesc> columns, List<IdentityColumn> identityColumns)
+        private static void getSqlForInsert(StringBuilder sb, string tableName, List<ColumnDesc> columns, List<IdentityColumn> identityColumns)
         {
             if (columns != null && columns.Count > 0)
             {
-                sb.AppendFormat("\n        public string GetSqlForInsert()");
+                sb.AppendFormat("\n        public static string GetSqlForInsert({0} {1})", tableName, tableName.ToLower());
                 sb.AppendFormat("\n        {{");
                 sb.AppendFormat("\n            string sql = string.Empty;\n");
                 sb.AppendFormat("\n            Dictionary<string, string> dicNameValue = new Dictionary<string, string>();\n");
@@ -182,20 +182,20 @@ namespace Gen
                     {
                         if (column.Nullable.ToLower() == "yes")
                         {
-                            sb.AppendFormat("\n            if ({0}.{1} != null)", "this", column.Column_name);
+                            sb.AppendFormat("\n            if ({0}.{1} != null)", tableName.ToLower(), column.Column_name);
                             sb.AppendFormat("\n            {{");
 
                             if (getType(column) == "bool?")
                             {
-                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else if (getType(column) == "DateTime?")
                             {
-                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.Value.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.Value.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else
                             {
-                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
 
                             sb.AppendFormat("\n            }}");
@@ -204,19 +204,19 @@ namespace Gen
                         {
                             if (getType(column) == "string")
                             {
-                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ?? \"\");", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ?? \"\");", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else if (getType(column) == "bool")
                             {
-                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2} ? \"1\" : \"0\");", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else if (getType(column) == "DateTime")
                             {
-                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else
                             {
-                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, "this", column.Column_name);
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString());", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                         }
                     }
