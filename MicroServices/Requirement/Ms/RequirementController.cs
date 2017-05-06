@@ -26,8 +26,8 @@ namespace Ms
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
             {
                 DbModel.Customer customer =
-                    conn.Query<DbModel.Customer>("SELECT * FROM Customer WITH(NOLOCK) WHERE CustomerId = @CustomerId",
-                        new {CustomerId = requirement.CustomerId}).FirstOrDefault();
+                    conn.Query<DbModel.Customer>(DbModel.Customer.GetSqlForSelectByPrimaryKeys(requirement.CustomerId))
+                        .FirstOrDefault();
 
                 if (customer == null)
                 {
@@ -73,9 +73,8 @@ namespace Ms
                 List<Requirement> requirements = null;
 
                 DbModel.Requirement requirement =
-                    conn.Query<DbModel.Requirement>(
-                        "SELECT TOP 1 * FROM Requirement WITH(NOLOCK) WHERE RequirementId = @RequirementId",
-                        new {RequirementId = requirementId}).FirstOrDefault();
+                    conn.Query<DbModel.Requirement>(DbModel.Requirement.GetSqlForSelectByPrimaryKeys(requirementId))
+                        .FirstOrDefault();
 
                 if (requirement != null)
                 {
