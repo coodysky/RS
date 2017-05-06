@@ -89,7 +89,7 @@ namespace Gen
                                     }
 
                                     string modelFileName = string.Format("{0}/{1}.cs", dbModelPath, tableName);
-                                    File.WriteAllText(modelFileName, sb.ToString());
+                                    File.WriteAllText(modelFileName, sb.ToString(), Encoding.UTF8);
                                 }
 
                                 Console.WriteLine(string.Format("生成Table[{0}]完成", tableName));
