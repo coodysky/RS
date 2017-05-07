@@ -92,11 +92,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ApiModel\ResponseRecord.cs" />
     <Compile Include="ApiModel\Requirement.cs" />
     <Compile Include="ApiModel\RespEntity.cs" />
     <Compile Include="DbModel\Customer.cs" />
     <Compile Include="DbModel\Requirement.cs" />
     <Compile Include="DbModel\RequirementImage.cs" />
+    <Compile Include="DbModel\ResponseRecord.cs" />
     <Compile Include="RequirementController.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

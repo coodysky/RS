@@ -8,6 +8,7 @@ namespace Ms.ApiModel
 {
     public class Requirement
     {
+        public int RequirementId { get; set; }
         public int CustomerId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
