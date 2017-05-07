@@ -78,6 +78,8 @@ namespace Gen
                                     sb.AppendFormat("\n");
                                     getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
                                     sb.AppendFormat("\n");
+                                    getSqlForSelect(sb, tableName);
+                                    sb.AppendFormat("\n");
                                     getSqlForUpdate(sb, tableName);
                                     sb.AppendFormat("\n");
                                     getSqlForDelete(sb, tableName);
@@ -295,7 +297,35 @@ namespace Gen
                 sb.AppendFormat("\n            return string.Format(\"SELECT TOP 1 * FROM [{0}] WITH(NOLOCK) WHERE {1}\", {2});",tableName, sqlForQuery, sqlForQueryValue);
                 sb.AppendFormat("\n        }}");
             }
-            
+        }
+
+        private static void getSqlForSelect(StringBuilder sb, string tableName)
+        {
+            sb.AppendFormat("\n        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN=0)");
+            sb.AppendFormat("\n        {{");
+            sb.AppendFormat("\n            string topNStr = \"\";");
+            sb.AppendFormat("\n            if (topN > 0)");
+            sb.AppendFormat("\n            {{");
+            sb.AppendFormat("\n                topNStr += string.Format(\" TOP {{0}} \", topN);");
+            sb.AppendFormat("\n            }}");
+            sb.AppendFormat("\n");
+            sb.AppendFormat("\n            string orderByStr = \"\";");
+            sb.AppendFormat("\n            if (orderByDic != null && orderByDic.Count > 0)");
+            sb.AppendFormat("\n            {{");
+            sb.AppendFormat("\n                foreach (var keyVal in orderByDic)");
+            sb.AppendFormat("\n                {{");
+            sb.AppendFormat("\n                    orderByStr += string.Format(\"{{0}} {{1}},\", keyVal.Key, keyVal.Value ? \"ASC\" : \"DESC\");");
+            sb.AppendFormat("\n                }}");
+            sb.AppendFormat("\n            }}");
+            sb.AppendFormat("\n            if (!string.IsNullOrEmpty(orderByStr))");
+            sb.AppendFormat("\n            {{");
+            sb.AppendFormat("\n                orderByStr = \"ORDER BY \" + orderByStr.Trim(',');");
+            sb.AppendFormat("\n            }}");
+            sb.AppendFormat("\n");
+            sb.AppendFormat("\n            string sqlStr = string.Format(\"SELECT {{0}} * FROM [{0}] WHERE {{1}} {{2}}\", topNStr, where, orderByStr);", tableName);
+            sb.AppendFormat("\n");
+            sb.AppendFormat("\n            return sqlStr;");
+            sb.AppendFormat("\n        }}");
         }
 
         private static void getSqlForUpdate(StringBuilder sb,string tableName)

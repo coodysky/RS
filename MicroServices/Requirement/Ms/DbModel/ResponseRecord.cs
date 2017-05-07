@@ -61,6 +61,32 @@ namespace Ms.DbModel
             return string.Format("SELECT TOP 1 * FROM [ResponseRecord] WITH(NOLOCK) WHERE ResponseRecordId = N'{0}'", ResponseRecordId);
         }
 
+        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN=0)
+        {
+            string topNStr = "";
+            if (topN > 0)
+            {
+                topNStr += string.Format(" TOP {0} ", topN);
+            }
+
+            string orderByStr = "";
+            if (orderByDic != null && orderByDic.Count > 0)
+            {
+                foreach (var keyVal in orderByDic)
+                {
+                    orderByStr += string.Format("{0} {1},", keyVal.Key, keyVal.Value ? "ASC" : "DESC");
+                }
+            }
+            if (!string.IsNullOrEmpty(orderByStr))
+            {
+                orderByStr = "ORDER BY " + orderByStr.Trim(',');
+            }
+
+            string sqlStr = string.Format("SELECT {0} * FROM [ResponseRecord] WHERE {1} {2}", topNStr, where, orderByStr);
+
+            return sqlStr;
+        }
+
         public static string GetSqlForUpdate(string set, string where)
         {
             if (string.IsNullOrEmpty(set) || string.IsNullOrEmpty(where))
