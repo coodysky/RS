@@ -75,9 +75,13 @@ namespace Gen
                                     }
 
                                     getSqlForInsert(sb, tableName, columns, identityColumns);
-                                    sb.AppendFormat("        \n");
+                                    sb.AppendFormat("\n");
                                     getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
-                                    sb.AppendFormat("        \n");
+                                    sb.AppendFormat("\n");
+                                    getSqlForUpdate(sb, tableName);
+                                    sb.AppendFormat("\n");
+                                    getSqlForDelete(sb, tableName);
+                                    sb.AppendFormat("\n");
 
                                     sb.AppendFormat("    }}\n");
                                     sb.AppendFormat("}}\n");
@@ -292,6 +296,28 @@ namespace Gen
                 sb.AppendFormat("\n        }}");
             }
             
+        }
+
+        private static void getSqlForUpdate(StringBuilder sb,string tableName)
+        {
+            sb.AppendFormat("\n        public static string GetSqlForUpdate(string set, string where)");
+            sb.AppendFormat("\n        {{");
+            sb.AppendFormat("\n            if (string.IsNullOrEmpty(set) || string.IsNullOrEmpty(where))");
+            sb.AppendFormat("\n                return string.Empty;");
+            sb.AppendFormat("\n");
+            sb.AppendFormat("\n            return string.Format(\"UPDATE [{0}] SET {{0}} WHERE {{1}}\", set, where);", tableName);
+            sb.AppendFormat("\n        }}");
+        }
+
+        private static void getSqlForDelete(StringBuilder sb, string tableName)
+        {
+            sb.AppendFormat("\n        public static string GetSqlForDelete(string where)");
+            sb.AppendFormat("\n        {{");
+            sb.AppendFormat("\n            if (string.IsNullOrEmpty(where))");
+            sb.AppendFormat("\n                return string.Empty;");
+            sb.AppendFormat("\n");
+            sb.AppendFormat("\n            return string.Format(\"DELETE FROM [{0}] WHERE {{0}}\", where);", tableName);
+            sb.AppendFormat("\n        }}");
         }
     }
 }

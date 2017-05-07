@@ -50,11 +50,27 @@ namespace Ms.DbModel
             
             return sql;
         }
-        
+
 
         public static string GetSqlForSelectByPrimaryKeys(int CustomerAddressId)
         {
             return string.Format("SELECT TOP 1 * FROM [CustomerAddress] WITH(NOLOCK) WHERE CustomerAddressId = N'{0}'", CustomerAddressId);
-        }        
+        }
+
+        public static string GetSqlForUpdate(string set, string where)
+        {
+            if (string.IsNullOrEmpty(set) || string.IsNullOrEmpty(where))
+                return string.Empty;
+
+            return string.Format("UPDATE [CustomerAddress] SET {0} WHERE {1}", set, where);
+        }
+
+        public static string GetSqlForDelete(string where)
+        {
+            if (string.IsNullOrEmpty(where))
+                return string.Empty;
+
+            return string.Format("DELETE FROM [CustomerAddress] WHERE {0}", where);
+        }
     }
 }

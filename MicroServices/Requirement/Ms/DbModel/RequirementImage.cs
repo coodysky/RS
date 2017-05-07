@@ -46,11 +46,27 @@ namespace Ms.DbModel
             
             return sql;
         }
-        
+
 
         public static string GetSqlForSelectByPrimaryKeys(int RequirementImageId)
         {
             return string.Format("SELECT TOP 1 * FROM [RequirementImage] WITH(NOLOCK) WHERE RequirementImageId = N'{0}'", RequirementImageId);
-        }        
+        }
+
+        public static string GetSqlForUpdate(string set, string where)
+        {
+            if (string.IsNullOrEmpty(set) || string.IsNullOrEmpty(where))
+                return string.Empty;
+
+            return string.Format("UPDATE [RequirementImage] SET {0} WHERE {1}", set, where);
+        }
+
+        public static string GetSqlForDelete(string where)
+        {
+            if (string.IsNullOrEmpty(where))
+                return string.Empty;
+
+            return string.Format("DELETE FROM [RequirementImage] WHERE {0}", where);
+        }
     }
 }
