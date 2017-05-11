@@ -70,35 +70,19 @@ namespace Ms
             {
                 List<Requirement> requirements = null;
 
-                DbModel.Requirement requirement =
+                DbModel.Requirement modelRequirement =
                     conn.Query<DbModel.Requirement>(DbModel.Requirement.GetSqlForSelectByPrimaryKeys(requirementId))
                         .FirstOrDefault();
 
-                if (requirement != null)
+                if (modelRequirement != null)
                 {
-                    requirements = new List<Requirement>()
+                    requirements = new List<Requirement>();
+
+                    var requirement = buildFromModel(modelRequirement);
+                    if (requirement != null)
                     {
-                        new Requirement()
-                        {
-                            RequirementId = requirement.RequirementId,
-                            CustomerId = requirement.CustomerId,
-                            Title = requirement.Title,
-                            Content = requirement.Content,
-                            Address = requirement.Address,
-                            Longitude = requirement.Longitude,
-                            Latitude = requirement.Latitude,
-                            ContactPhone = requirement.ContactPhone,
-                            ContactMan = requirement.ContactMan,
-                            ReleaseDate =
-                                requirement.ReleaseDate.HasValue
-                                    ? requirement.ReleaseDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                                    : string.Empty,
-                            CreateBy = requirement.CreateBy,
-                            UpdateBy = requirement.UpdateBy,
-                            CreateDate = requirement.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                            UpdateDate = requirement.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss")
-                        }
-                    };
+                        requirements.Add(requirement);
+                    }
                 }
 
                 return new RespEntity() {Code = 1, Message = "", Requirements = requirements};
@@ -158,6 +142,78 @@ namespace Ms
             }
 
             return new RespEntity() {Code = 1, Message = ""};
+        }
+
+        [Route("Requirement/LoadRequirements")]
+        [HttpPost]
+        public RespEntity LoadRequirements(string title,int topN = 20)
+        {
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
+            {
+                List<Requirement> requirements = null;
+
+                string where = "1=1";
+
+                if (!string.IsNullOrEmpty(title.Trim()))
+                {
+                    where += string.Format(" AND Title LIKE N'{0}'", title.Trim());
+                }
+
+                Dictionary<string, bool> orderByDic = new Dictionary<string, bool>();
+                orderByDic.Add("RequirementId", false);
+
+                string sqlForSelect = DbModel.Requirement.GetSqlForSelect(where, orderByDic, topN);
+
+                List<DbModel.Requirement> modelRequirements = conn.Query<DbModel.Requirement>(sqlForSelect).ToList();
+
+
+                if (modelRequirements != null && modelRequirements.Count > 0)
+                {
+                    requirements = new List<Requirement>();
+                    foreach (var modelRequirement in modelRequirements)
+                    {
+                        var requirement = buildFromModel(modelRequirement);
+
+                        if (requirement != null)
+                        {
+                            requirements.Add(requirement);
+                        }
+                    }
+                }
+
+                return new RespEntity() { Code = 1, Message = "", Requirements = requirements };
+            }
+        }
+
+        private Requirement buildFromModel(DbModel.Requirement modelRequirement)
+        {
+            if (modelRequirement == null)
+            {
+                return null;
+            }
+
+            Requirement requirement = new Requirement()
+            {
+                RequirementId = modelRequirement.RequirementId,
+                CustomerId = modelRequirement.CustomerId,
+                Title = modelRequirement.Title,
+                Content = modelRequirement.Content,
+                Address = modelRequirement.Address,
+                Longitude = modelRequirement.Longitude,
+                Latitude = modelRequirement.Latitude,
+                ContactPhone = modelRequirement.ContactPhone,
+                ContactMan = modelRequirement.ContactMan,
+                ReleaseDate =
+                                modelRequirement.ReleaseDate.HasValue
+                                    ? modelRequirement.ReleaseDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
+                                    : string.Empty,
+                CreateBy = modelRequirement.CreateBy,
+                UpdateBy = modelRequirement.UpdateBy,
+                CreateDate = modelRequirement.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"),
+                UpdateDate = modelRequirement.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss")
+            };
+
+            return requirement;
         }
     }
 }
