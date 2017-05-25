@@ -3,36 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Ms.DbModel
+namespace DbModel.Models
 {
-    public class CustomerAddress
+    public class Customer
     {
-        public int CustomerAddressId { get; set; }
         public int CustomerId { get; set; }
-        public string Address { get; set; }
-        public string Longitude { get; set; }
-        public string Latitude { get; set; }
-        public bool IsDefault { get; set; }
+        public string NickName { get; set; }
+        public string RealName { get; set; }
+        public string Password { get; set; }
+        public string MobilePhone { get; set; }
+        public string Email { get; set; }
         public string CreateBy { get; set; }
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
 
-        public static string GetSqlForInsert(CustomerAddress customeraddress)
+        public static string GetSqlForInsert(Customer customer)
         {
             string sql = string.Empty;
 
             Dictionary<string, string> dicNameValue = new Dictionary<string, string>();
 
-            dicNameValue.Add("CustomerId", customeraddress.CustomerId.ToString());
-            dicNameValue.Add("Address", customeraddress.Address ?? "");
-            dicNameValue.Add("Longitude", customeraddress.Longitude ?? "");
-            dicNameValue.Add("Latitude", customeraddress.Latitude ?? "");
-            dicNameValue.Add("IsDefault", customeraddress.IsDefault ? "1" : "0");
-            dicNameValue.Add("CreateBy", customeraddress.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", customeraddress.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
-            dicNameValue.Add("UpdateBy", customeraddress.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", customeraddress.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("NickName", customer.NickName ?? "");
+            dicNameValue.Add("RealName", customer.RealName ?? "");
+            dicNameValue.Add("Password", customer.Password ?? "");
+            dicNameValue.Add("MobilePhone", customer.MobilePhone ?? "");
+            dicNameValue.Add("Email", customer.Email ?? "");
+            dicNameValue.Add("CreateBy", customer.CreateBy ?? "");
+            dicNameValue.Add("CreateDate", customer.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateBy", customer.UpdateBy ?? "");
+            dicNameValue.Add("UpdateDate", customer.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)
@@ -43,7 +43,7 @@ namespace Ms.DbModel
             
             if (!string.IsNullOrEmpty(sql1.ToString()) && !string.IsNullOrEmpty(sql2.ToString()))
             {
-                sql = "INSERT INTO[CustomerAddress](";
+                sql = "INSERT INTO[Customer](";
                 sql += sql1.ToString().Trim((',')) + ") VALUES(";
                 sql += sql2.ToString().Trim((',')) + ")";
             }
@@ -52,9 +52,9 @@ namespace Ms.DbModel
         }
 
 
-        public static string GetSqlForSelectByPrimaryKeys(int CustomerAddressId)
+        public static string GetSqlForSelectByPrimaryKeys(int CustomerId)
         {
-            return string.Format("SELECT TOP 1 * FROM [CustomerAddress] WITH(NOLOCK) WHERE CustomerAddressId = N'{0}'", CustomerAddressId);
+            return string.Format("SELECT TOP 1 * FROM [Customer] WITH(NOLOCK) WHERE CustomerId = N'{0}'", CustomerId);
         }
 
         public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN=0)
@@ -78,7 +78,7 @@ namespace Ms.DbModel
                 orderByStr = "ORDER BY " + orderByStr.Trim(',');
             }
 
-            string sqlStr = string.Format("SELECT {0} * FROM [CustomerAddress] WHERE {1} {2}", topNStr, where, orderByStr);
+            string sqlStr = string.Format("SELECT {0} * FROM [Customer] WHERE {1} {2}", topNStr, where, orderByStr);
 
             return sqlStr;
         }
@@ -88,7 +88,7 @@ namespace Ms.DbModel
             if (string.IsNullOrEmpty(set) || string.IsNullOrEmpty(where))
                 return string.Empty;
 
-            return string.Format("UPDATE [CustomerAddress] SET {0} WHERE {1}", set, where);
+            return string.Format("UPDATE [Customer] SET {0} WHERE {1}", set, where);
         }
 
         public static string GetSqlForDelete(string where)
@@ -96,7 +96,7 @@ namespace Ms.DbModel
             if (string.IsNullOrEmpty(where))
                 return string.Empty;
 
-            return string.Format("DELETE FROM [CustomerAddress] WHERE {0}", where);
+            return string.Format("DELETE FROM [Customer] WHERE {0}", where);
         }
     }
 }

@@ -1,7 +1,0 @@
-db: 'MsSql'
-connectionString: 'Data Source=.;Initial Catalog=RS;Integrated Security=SSPI;'
-dbModelPath: 'Ms/DbModel'
-nameSpace: ''
-tables:
- - Customer
- - CustomerAddress

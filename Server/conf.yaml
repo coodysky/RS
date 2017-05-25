@@ -1,7 +1,7 @@
 db: 'MsSql'
 connectionString: 'Data Source=.;Initial Catalog=RS;Integrated Security=SSPI;'
-dbModelPath: 'Ms/DbModel'
-nameSpace: ''
+dbModelPath: '../Server/DbModel/Models'
+nameSpace: 'DbModel.Models'
 tables:
  - Customer
  - RequirementImage

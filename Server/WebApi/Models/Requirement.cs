@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ms.ApiModel
+namespace WebApi.Models
 {
     public class Requirement
     {

@@ -18,90 +18,83 @@ namespace Gen
         {
             try
             {
-                //string[] folders = Directory.GetDirectories("../MicroServices");
-                string[] folders = Directory.GetDirectories("D:/Coody/Projects/RS/MicroServices");
+                string fileName = "../Server/conf.yaml";
 
-                foreach (var folder in folders)
+                Console.WriteLine(string.Format("conf.yaml[{0}]", fileName));
+
+                if (File.Exists(fileName))
                 {
-                    string fileName = folder + "/Ms/conf.yaml";
+                    string yamlText = File.ReadAllText(fileName);
 
-                    Console.WriteLine(string.Format("conf.yaml[{0}]", fileName));
+                    var input = new StringReader(yamlText);
 
-                    if (File.Exists(fileName))
+                    var deserializer = new DeserializerBuilder()
+                        .WithNamingConvention(new CamelCaseNamingConvention())
+                        .Build();
+
+                    var confYaml = deserializer.Deserialize<ConfYaml>(input);
+
+                    foreach (string tableName in confYaml.Tables)
                     {
-                        string yamlText = File.ReadAllText(fileName);
-
-                        var input = new StringReader(yamlText);
-
-                        var deserializer = new DeserializerBuilder()
-                            .WithNamingConvention(new CamelCaseNamingConvention())
-                            .Build();
-
-                        var confYaml = deserializer.Deserialize<ConfYaml>(input);
-
-                        foreach (string tableName in confYaml.Tables)
+                        using (var conn = new SqlConnection(confYaml.ConnectionString))
                         {
-                            using (var conn = new SqlConnection(confYaml.ConnectionString))
+                            string sql = string.Format("EXEC SP_HELP '{0}'", tableName);
+                            var s = conn.QueryMultiple(sql);
+                            s.Read(); //第一个结果忽略不要
+                            List<ColumnDesc> columns = s.Read<ColumnDesc>().ToList();
+                            List<IdentityColumn> identityColumns = s.Read<IdentityColumn>().ToList();
+                            s.Read();
+                            s.Read();
+                            s.Read();
+                            List<Constraint> constraints = s.Read<Constraint>().ToList();
+
+                            if (columns.Count > 0)
                             {
-                                string sql = string.Format("EXEC SP_HELP '{0}'", tableName);
-                                var s = conn.QueryMultiple(sql);
-                                s.Read(); //第一个结果忽略不要
-                                List<ColumnDesc> columns = s.Read<ColumnDesc>().ToList();
-                                List<IdentityColumn> identityColumns = s.Read<IdentityColumn>().ToList();
-                                s.Read();
-                                s.Read();
-                                s.Read();
-                                List<Constraint> constraints = s.Read<Constraint>().ToList();
-
-                                if (columns.Count > 0)
+                                StringBuilder sb = new StringBuilder();
+                                sb.AppendFormat("using System;\n");
+                                sb.AppendFormat("using System.Collections.Generic;\n");
+                                sb.AppendFormat("using System.Linq;\n");
+                                sb.AppendFormat("using System.Text;\n");
+                                sb.AppendFormat("\n");
+                                sb.AppendFormat("namespace {0}\n",
+                                    string.IsNullOrEmpty(confYaml.NameSpace) ? "DbModel.Models" : confYaml.NameSpace);
+                                sb.AppendFormat("{{\n");
+                                sb.AppendFormat("    public class {0}\n", tableName);
+                                sb.AppendFormat("    {{\n");
+                                foreach (ColumnDesc column in columns)
                                 {
-                                    StringBuilder sb = new StringBuilder();
-                                    sb.AppendFormat("using System;\n");
-                                    sb.AppendFormat("using System.Collections.Generic;\n");
-                                    sb.AppendFormat("using System.Linq;\n");
-                                    sb.AppendFormat("using System.Text;\n");
-                                    sb.AppendFormat("\n");
-                                    sb.AppendFormat("namespace {0}\n",
-                                        string.IsNullOrEmpty(confYaml.NameSpace) ? "Ms.DbModel" : confYaml.NameSpace);
-                                    sb.AppendFormat("{{\n");
-                                    sb.AppendFormat("    public class {0}\n", tableName);
-                                    sb.AppendFormat("    {{\n");
-                                    foreach (ColumnDesc column in columns)
-                                    {
-                                        string type = getType(column);
+                                    string type = getType(column);
 
-                                        sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
-                                            column.Column_name);
-                                    }
-
-                                    getSqlForInsert(sb, tableName, columns, identityColumns);
-                                    sb.AppendFormat("\n");
-                                    getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
-                                    sb.AppendFormat("\n");
-                                    getSqlForSelect(sb, tableName);
-                                    sb.AppendFormat("\n");
-                                    getSqlForUpdate(sb, tableName);
-                                    sb.AppendFormat("\n");
-                                    getSqlForDelete(sb, tableName);
-                                    sb.AppendFormat("\n");
-
-                                    sb.AppendFormat("    }}\n");
-                                    sb.AppendFormat("}}\n");
-
-                                    string dbModelPath = string.Format("{0}/{1}", folder, confYaml.DbModelPath);
-                                    if (!Directory.Exists(dbModelPath))
-                                    {
-                                        Directory.CreateDirectory(dbModelPath);
-                                    }
-
-                                    string modelFileName = string.Format("{0}/{1}.cs", dbModelPath, tableName);
-                                    File.WriteAllText(modelFileName, sb.ToString(), Encoding.UTF8);
+                                    sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
+                                        column.Column_name);
                                 }
 
-                                Console.WriteLine(string.Format("生成Table[{0}]完成", tableName));
-                            }
-                        }
+                                getSqlForInsert(sb, tableName, columns, identityColumns);
+                                sb.AppendFormat("\n");
+                                getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
+                                sb.AppendFormat("\n");
+                                getSqlForSelect(sb, tableName);
+                                sb.AppendFormat("\n");
+                                getSqlForUpdate(sb, tableName);
+                                sb.AppendFormat("\n");
+                                getSqlForDelete(sb, tableName);
+                                sb.AppendFormat("\n");
 
+                                sb.AppendFormat("    }}\n");
+                                sb.AppendFormat("}}\n");
+
+                                string dbModelPath = string.Format("{0}", confYaml.DbModelPath);
+                                if (!Directory.Exists(dbModelPath))
+                                {
+                                    Directory.CreateDirectory(dbModelPath);
+                                }
+
+                                string modelFileName = string.Format("{0}/{1}.cs", dbModelPath, tableName);
+                                File.WriteAllText(modelFileName, sb.ToString(), Encoding.UTF8);
+                            }
+
+                            Console.WriteLine(string.Format("生成Table[{0}]完成", tableName));
+                        }
                     }
                 }
             }
