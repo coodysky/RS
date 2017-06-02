@@ -3,8 +3,8 @@ CREATE TABLE CustomerAddress
     CustomerAddressId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,--主键自增
     CustomerId INT NOT NULL,--用户Id
     Address NVARCHAR(1000) NOT NULL,--具体地址
-    Longitude NVARCHAR(20) NOT NULL,--经度
-    Latitude NVARCHAR(20) NOT NULL,--纬度
+    Longitude DECIMAL(10,7) NOT NULL,--经度
+    Latitude DECIMAL(10,7) NOT NULL,--纬度
     IsDefault BIT NOT NULL,--是否默认地址
     CreateBy NVARCHAR(50) NOT NULL,--创建人
     CreateDate DATETIME NOT NULL DEFAULT ( GETDATE() ),--创建时间

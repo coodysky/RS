@@ -57,7 +57,14 @@ namespace DbModel.Models
             return string.Format("SELECT TOP 1 * FROM [Customer] WITH(NOLOCK) WHERE CustomerId = N'{0}'", CustomerId);
         }
 
-        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN=0)
+        /// <summary>
+        /// 获得条件查询sql
+        /// </summary>
+        /// <param name="where">必填，查询条件，不能包含where关键字</param>
+        /// <param name="orderByDic">排序字典，key为排序条件，ke中不能包含asc、desc关键字，value值true为asc，false为desc</param>
+        /// <param name="topN">查询结果前N条</param>
+        /// <returns>返回条件查询的sql</returns>
+        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN)
         {
             string topNStr = "";
             if (topN > 0)

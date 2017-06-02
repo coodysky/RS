@@ -143,8 +143,15 @@ namespace WebApi.Controllers
         }
         
         [HttpPost]
-        public RespEntity LoadRequirements(string title, int topN = 20)
+        public RespEntity LoadRequirements(string Title, int TopN = 20)
         {
+            string title = Title.Trim();
+
+            if (string.IsNullOrEmpty(title))
+            {
+                return new RespEntity() {Code = -1, Message = "标题为空"};
+            }
+
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
             {
                 List<Requirement> requirements = null;
@@ -153,16 +160,48 @@ namespace WebApi.Controllers
 
                 if (!string.IsNullOrEmpty(title.Trim()))
                 {
-                    where += string.Format(" AND Title LIKE N'{0}'", title.Trim());
+                    where += string.Format(" AND Title LIKE N'{0}'", title);
                 }
 
                 Dictionary<string, bool> orderByDic = new Dictionary<string, bool>();
                 orderByDic.Add("RequirementId", false);
 
-                string sqlForSelect = DbModels.Requirement.GetSqlForSelect(where, orderByDic, topN);
+                string sqlForSelect = DbModels.Requirement.GetSqlForSelect(where, orderByDic, TopN);
 
                 List<DbModels.Requirement> modelRequirements = conn.Query<DbModels.Requirement>(sqlForSelect).ToList();
 
+
+                if (modelRequirements != null && modelRequirements.Count > 0)
+                {
+                    requirements = new List<Requirement>();
+                    foreach (var modelRequirement in modelRequirements)
+                    {
+                        var requirement = buildFromModel(modelRequirement);
+
+                        if (requirement != null)
+                        {
+                            requirements.Add(requirement);
+                        }
+                    }
+                }
+
+                return new RespEntity() { Code = 1, Message = "", Requirements = requirements };
+            }
+        }
+
+        [HttpPost]
+        public RespEntity LoadNearRequirements(decimal Longitude, decimal Latitude,int TopN = 20)
+        {
+            using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
+            {
+                List<Requirement> requirements = null;
+
+                Dictionary<string, bool> orderBy = new Dictionary<string, bool>();
+                orderBy.Add(string.Format("ABS(Longitude - {0}) + ABS(Latitude - {1})", Longitude, Latitude), true);
+
+                string sqlForSelect = DbModels.Requirement.GetSqlForSelect("1=1", orderBy, TopN);
+
+                List<DbModels.Requirement> modelRequirements = conn.Query<DbModels.Requirement>(sqlForSelect).ToList();
 
                 if (modelRequirements != null && modelRequirements.Count > 0)
                 {

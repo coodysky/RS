@@ -14,8 +14,8 @@ namespace WebApi.Models
         public string Content { get; set; }
         public string ImageUrl { get; set; }
         public string Address { get; set; }
-        public string Longitude { get; set; }
-        public string Latitude { get; set; }
+        public decimal? Longitude { get; set; }
+        public decimal? Latitude { get; set; }
         public string ContactPhone { get; set; }
         public string ContactMan { get; set; }
         public string ReleaseDate { get; set; }

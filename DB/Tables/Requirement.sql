@@ -5,8 +5,8 @@ CREATE TABLE Requirement
     Title NVARCHAR(50) NOT NULL,--标题
     Content NVARCHAR(MAX) NOT NULL,--内容
     Address NVARCHAR(1000) NULL,--需求地址
-    Longitude NVARCHAR(20) NULL,--经度
-    Latitude NVARCHAR(20) NULL,--纬度
+    Longitude DECIMAL(10,7) NULL,--经度
+    Latitude DECIMAL(10,7) NULL,--纬度
     ContactPhone NVARCHAR(20) NULL,--联系电话
     ContactMan NVARCHAR(50) NULL,--联系人
     RequirementStatusCode NVARCHAR(20) NOT NULL,--需求状态

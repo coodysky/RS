@@ -294,7 +294,14 @@ namespace Gen
 
         private static void getSqlForSelect(StringBuilder sb, string tableName)
         {
-            sb.AppendFormat("\n        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN=0)");
+            sb.AppendFormat("\n        /// <summary>");
+            sb.AppendFormat("\n        /// 获得条件查询sql");
+            sb.AppendFormat("\n        /// </summary>");
+            sb.AppendFormat("\n        /// <param name=\"where\">必填，查询条件，不能包含where关键字</param>");
+            sb.AppendFormat("\n        /// <param name=\"orderByDic\">排序字典，key为排序条件，ke中不能包含asc、desc关键字，value值true为asc，false为desc</param>");
+            sb.AppendFormat("\n        /// <param name=\"topN\">查询结果前N条</param>");
+            sb.AppendFormat("\n        /// <returns>返回条件查询的sql</returns>");
+            sb.AppendFormat("\n        public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN)");
             sb.AppendFormat("\n        {{");
             sb.AppendFormat("\n            string topNStr = \"\";");
             sb.AppendFormat("\n            if (topN > 0)");
