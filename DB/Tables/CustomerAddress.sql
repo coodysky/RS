@@ -20,6 +20,9 @@ ON CustomerAddress (CustomerId)
 CREATE INDEX Ix_CustomerAddress__CustomerId__IsDefault
 ON CustomerAddress (CustomerId,IsDefault)
 
+CREATE INDEX Ix_CustomerAddress__Longitude__Latitude
+ON CustomerAddress (Longitude,Latitude)
+
 GO
 
 EXEC sp_addextendedproperty N'MS_Description', N'主键Id，自增', 'SCHEMA', N'dbo', 'TABLE', N'CustomerAddress', 'COLUMN', N'CustomerAddressId'

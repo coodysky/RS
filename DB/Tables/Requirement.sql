@@ -22,6 +22,9 @@ GO
 CREATE INDEX Ix_Requirement__Title
 ON Requirement (Title)
 
+CREATE INDEX Ix_Requirement__Longitude__Latitude
+ON Requirement (Longitude,Latitude)
+
 GO
 
 EXEC sp_addextendedproperty N'MS_Description', N'主键Id，自增', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'RequirementId'
