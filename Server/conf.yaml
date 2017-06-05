@@ -1,5 +1,5 @@
 db: 'MsSql'
-connectionString: 'Data Source=.;Initial Catalog=RS;Integrated Security=SSPI;'
+connectionString: 'Data Source=.;Initial Catalog=RS;UID=sa;PWD=123456;'
 dbModelPath: '../Server/DbModel/Models'
 nameSpace: 'DbModel.Models'
 tables:
