@@ -55,6 +55,7 @@ namespace Gen
                                 sb.AppendFormat("using System.Collections.Generic;\n");
                                 sb.AppendFormat("using System.Linq;\n");
                                 sb.AppendFormat("using System.Text;\n");
+                                sb.AppendFormat("using DbModel.Extension;\n");
                                 sb.AppendFormat("\n");
                                 sb.AppendFormat("namespace {0}\n",
                                     string.IsNullOrEmpty(confYaml.NameSpace) ? "DbModel.Models" : confYaml.NameSpace);
@@ -75,15 +76,25 @@ namespace Gen
                                 sb.AppendFormat("\n");
                                 sb.AppendFormat("        #region 方法\n");
                                 sb.AppendFormat("\n");
+
                                 getSqlForInsert(sb, tableName, columns, identityColumns);
+
                                 sb.AppendFormat("\n");
+
                                 getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
+
                                 sb.AppendFormat("\n");
+
                                 getSqlForSelect(sb, tableName);
+
                                 sb.AppendFormat("\n");
+
                                 getSqlForUpdate(sb, tableName);
+
                                 sb.AppendFormat("\n");
+
                                 getSqlForDelete(sb, tableName);
+
                                 sb.AppendFormat("\n");
                                 sb.AppendFormat("\n");
                                 sb.AppendFormat("        #endregion\n");
@@ -198,7 +209,7 @@ namespace Gen
                             }
                             else if (getType(column) == "DateTime?")
                             {
-                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.Value.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
+                                sb.AppendFormat("\n                dicNameValue.Add(\"{0}\", {1}.{2}.Value.ToStringDate());", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else
                             {
@@ -219,7 +230,7 @@ namespace Gen
                             }
                             else if (getType(column) == "DateTime")
                             {
-                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToString(\"yyyy-MM-dd HH:mm:ss\"));", column.Column_name, tableName.ToLower(), column.Column_name);
+                                sb.AppendFormat("\n            dicNameValue.Add(\"{0}\", {1}.{2}.ToStringDate());", column.Column_name, tableName.ToLower(), column.Column_name);
                             }
                             else
                             {

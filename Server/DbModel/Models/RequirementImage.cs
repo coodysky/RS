@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DbModel.Extension;
 
 namespace DbModel.Models
 {
@@ -33,9 +34,9 @@ namespace DbModel.Models
             dicNameValue.Add("ImageType", requirementimage.ImageType ?? "");
             dicNameValue.Add("ImageUrl", requirementimage.ImageUrl ?? "");
             dicNameValue.Add("CreateBy", requirementimage.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", requirementimage.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CreateDate", requirementimage.CreateDate.ToStringDate());
             dicNameValue.Add("UpdateBy", requirementimage.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", requirementimage.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateDate", requirementimage.UpdateDate.ToStringDate());
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DbModel.Extension;
 
 namespace DbModel.Models
 {
@@ -62,12 +63,12 @@ namespace DbModel.Models
             dicNameValue.Add("RequirementStatusCode", requirement.RequirementStatusCode ?? "");
             if (requirement.ReleaseDate != null)
             {
-                dicNameValue.Add("ReleaseDate", requirement.ReleaseDate.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+                dicNameValue.Add("ReleaseDate", requirement.ReleaseDate.Value.ToStringDate());
             }
             dicNameValue.Add("CreateBy", requirement.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", requirement.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CreateDate", requirement.CreateDate.ToStringDate());
             dicNameValue.Add("UpdateBy", requirement.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", requirement.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateDate", requirement.UpdateDate.ToStringDate());
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

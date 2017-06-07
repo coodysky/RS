@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DbModel.Extension;
 
 namespace DbModel.Models
 {
@@ -37,9 +38,9 @@ namespace DbModel.Models
             dicNameValue.Add("MobilePhone", customer.MobilePhone ?? "");
             dicNameValue.Add("Email", customer.Email ?? "");
             dicNameValue.Add("CreateBy", customer.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", customer.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CreateDate", customer.CreateDate.ToStringDate());
             dicNameValue.Add("UpdateBy", customer.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", customer.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateDate", customer.UpdateDate.ToStringDate());
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)

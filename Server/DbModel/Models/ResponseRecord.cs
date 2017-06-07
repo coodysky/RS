@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DbModel.Extension;
 
 namespace DbModel.Models
 {
@@ -41,9 +42,9 @@ namespace DbModel.Models
             dicNameValue.Add("IsDeleted", responserecord.IsDeleted ? "1" : "0");
             dicNameValue.Add("IsFinalServeRecord", responserecord.IsFinalServeRecord ? "1" : "0");
             dicNameValue.Add("CreateBy", responserecord.CreateBy ?? "");
-            dicNameValue.Add("CreateDate", responserecord.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("CreateDate", responserecord.CreateDate.ToStringDate());
             dicNameValue.Add("UpdateBy", responserecord.UpdateBy ?? "");
-            dicNameValue.Add("UpdateDate", responserecord.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss"));
+            dicNameValue.Add("UpdateDate", responserecord.UpdateDate.ToStringDate());
             StringBuilder sql1 = new StringBuilder();
             StringBuilder sql2 = new StringBuilder();
             foreach (var nameValue in dicNameValue)
