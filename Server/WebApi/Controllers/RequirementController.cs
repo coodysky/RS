@@ -26,7 +26,7 @@ namespace WebApi.Controllers
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
             {
                 DbModels.Customer customer =
-                    conn.Query<DbModels.Customer>(DbModels.Customer.GetSqlForSelectByPrimaryKeys(requirement.CustomerId))
+                    conn.Query<DbModels.Customer>(DbModels.Customer.GetSqlForSelectByPrimaryKeys(requirement.CustomerId.Value))
                         .FirstOrDefault();
 
                 if (customer == null)

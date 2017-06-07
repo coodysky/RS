@@ -147,10 +147,12 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\RequirementController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Requirement.cs" />
     <Compile Include="Models\RespEntity.cs" />
     <Compile Include="Models\ResponseRecord.cs" />

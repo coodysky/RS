@@ -8,8 +8,8 @@ namespace WebApi.Models
 {
     public class Requirement
     {
-        public int RequirementId { get; set; }
-        public int CustomerId { get; set; }
+        public int? RequirementId { get; set; }
+        public int? CustomerId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
         public string ImageUrl { get; set; }
