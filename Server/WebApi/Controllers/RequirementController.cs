@@ -221,6 +221,13 @@ namespace WebApi.Controllers
             }
         }
 
+        [HttpGet]
+        [HttpPost]
+        public RespEntity Test(string title)
+        {
+            return new RespEntity() {Code = 1, Message = title};
+        }
+
         private Requirement buildFromModel(DbModels.Requirement modelRequirement)
         {
             if (modelRequirement == null)
