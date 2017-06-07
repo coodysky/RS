@@ -61,6 +61,8 @@ namespace Gen
                                 sb.AppendFormat("{{\n");
                                 sb.AppendFormat("    public class {0}\n", tableName);
                                 sb.AppendFormat("    {{\n");
+                                sb.AppendFormat("        #region 属性\n");
+                                sb.AppendFormat("\n");
                                 foreach (ColumnDesc column in columns)
                                 {
                                     string type = getType(column);
@@ -68,7 +70,11 @@ namespace Gen
                                     sb.AppendFormat("        public {0} {1} {{ get; set; }}\n", type,
                                         column.Column_name);
                                 }
-
+                                sb.AppendFormat("\n");
+                                sb.AppendFormat("        #endregion\n");
+                                sb.AppendFormat("\n");
+                                sb.AppendFormat("        #region 方法\n");
+                                sb.AppendFormat("\n");
                                 getSqlForInsert(sb, tableName, columns, identityColumns);
                                 sb.AppendFormat("\n");
                                 getSqlForSelectPrimaryKeys(sb, constraints, columns, tableName);
@@ -79,6 +85,8 @@ namespace Gen
                                 sb.AppendFormat("\n");
                                 getSqlForDelete(sb, tableName);
                                 sb.AppendFormat("\n");
+                                sb.AppendFormat("\n");
+                                sb.AppendFormat("        #endregion\n");
 
                                 sb.AppendFormat("    }}\n");
                                 sb.AppendFormat("}}\n");

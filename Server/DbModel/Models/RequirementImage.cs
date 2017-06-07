@@ -7,6 +7,8 @@ namespace DbModel.Models
 {
     public class RequirementImage
     {
+        #region 属性
+
         public int RequirementImageId { get; set; }
         public int RequirementId { get; set; }
         public string ImageType { get; set; }
@@ -15,6 +17,11 @@ namespace DbModel.Models
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        #endregion
+
+        #region 方法
+
 
         public static string GetSqlForInsert(RequirementImage requirementimage)
         {
@@ -101,5 +108,7 @@ namespace DbModel.Models
 
             return string.Format("DELETE FROM [RequirementImage] WHERE {0}", where);
         }
+
+        #endregion
     }
 }

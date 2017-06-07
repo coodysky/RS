@@ -7,6 +7,8 @@ namespace DbModel.Models
 {
     public class ResponseRecord
     {
+        #region 属性
+
         public int ResponseRecordId { get; set; }
         public int RequirementId { get; set; }
         public int ResponserId { get; set; }
@@ -19,6 +21,11 @@ namespace DbModel.Models
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        #endregion
+
+        #region 方法
+
 
         public static string GetSqlForInsert(ResponseRecord responserecord)
         {
@@ -109,5 +116,7 @@ namespace DbModel.Models
 
             return string.Format("DELETE FROM [ResponseRecord] WHERE {0}", where);
         }
+
+        #endregion
     }
 }

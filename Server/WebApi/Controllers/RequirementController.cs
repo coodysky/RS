@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Dapper;
+using DbModel.Extension;
 using WebApi.Models;
 using DbModels=DbModel.Models;
 
@@ -246,14 +247,11 @@ namespace WebApi.Controllers
                 Latitude = modelRequirement.Latitude,
                 ContactPhone = modelRequirement.ContactPhone,
                 ContactMan = modelRequirement.ContactMan,
-                ReleaseDate =
-                                modelRequirement.ReleaseDate.HasValue
-                                    ? modelRequirement.ReleaseDate.Value.ToString("yyyy-MM-dd HH:mm:ss")
-                                    : string.Empty,
+                ReleaseDate = modelRequirement.ReleaseDate.ToStringDate(),
                 CreateBy = modelRequirement.CreateBy,
                 UpdateBy = modelRequirement.UpdateBy,
-                CreateDate = modelRequirement.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                UpdateDate = modelRequirement.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                CreateDate = modelRequirement.CreateDate.ToStringDate(),
+                UpdateDate = modelRequirement.UpdateDate.ToStringDate()
             };
 
             return requirement;

@@ -7,6 +7,8 @@ namespace DbModel.Models
 {
     public class Requirement
     {
+        #region 属性
+
         public int RequirementId { get; set; }
         public int CustomerId { get; set; }
         public string Title { get; set; }
@@ -22,6 +24,11 @@ namespace DbModel.Models
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        #endregion
+
+        #region 方法
+
 
         public static string GetSqlForInsert(Requirement requirement)
         {
@@ -133,5 +140,7 @@ namespace DbModel.Models
 
             return string.Format("DELETE FROM [Requirement] WHERE {0}", where);
         }
+
+        #endregion
     }
 }

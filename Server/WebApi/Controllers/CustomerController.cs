@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using Dapper;
+using DbModel.Extension;
 using WebApi.Models;
 using DbModels=DbModel.Models;
 
@@ -97,8 +98,8 @@ namespace WebApi.Controllers
                 Email = modelCustomer.Email,
                 CreateBy = modelCustomer.CreateBy,
                 UpdateBy = modelCustomer.UpdateBy,
-                CreateDate = modelCustomer.CreateDate.ToString("yyyy-MM-dd HH:mm:ss"),
-                UpdateDate = modelCustomer.UpdateDate.ToString("yyyy-MM-dd HH:mm:ss")
+                CreateDate = modelCustomer.CreateDate.ToStringDate(),
+                UpdateDate = modelCustomer.UpdateDate.ToStringDate()
             };
 
             return customer;

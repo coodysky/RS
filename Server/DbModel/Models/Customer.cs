@@ -7,6 +7,8 @@ namespace DbModel.Models
 {
     public class Customer
     {
+        #region 属性
+
         public int CustomerId { get; set; }
         public string NickName { get; set; }
         public string RealName { get; set; }
@@ -17,6 +19,11 @@ namespace DbModel.Models
         public DateTime CreateDate { get; set; }
         public string UpdateBy { get; set; }
         public DateTime UpdateDate { get; set; }
+
+        #endregion
+
+        #region 方法
+
 
         public static string GetSqlForInsert(Customer customer)
         {
@@ -105,5 +112,7 @@ namespace DbModel.Models
 
             return string.Format("DELETE FROM [Customer] WHERE {0}", where);
         }
+
+        #endregion
     }
 }
