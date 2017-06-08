@@ -153,6 +153,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\RequirementTag.cs" />
     <Compile Include="Models\Requirement.cs" />
     <Compile Include="Models\RespEntity.cs" />
     <Compile Include="Models\ResponseRecord.cs" />

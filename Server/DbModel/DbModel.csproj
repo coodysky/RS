@@ -44,6 +44,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Requirement.cs" />
     <Compile Include="Models\RequirementImage.cs" />
+    <Compile Include="Models\RequirementTag.cs" />
     <Compile Include="Models\ResponseRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

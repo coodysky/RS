@@ -7,3 +7,4 @@ tables:
  - RequirementImage
  - Requirement
  - ResponseRecord
+ - RequirementTag

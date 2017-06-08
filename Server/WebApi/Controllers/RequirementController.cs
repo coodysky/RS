@@ -18,10 +18,11 @@ namespace WebApi.Controllers
         [HttpPost]
         public RespEntity CreateRequirement(Requirement requirement)
         {
-            if (requirement == null || requirement.CustomerId <= 0 || string.IsNullOrEmpty(requirement.Title) ||
+            if (requirement == null || !requirement.CustomerId.HasValue || requirement.CustomerId <= 0 ||
+                string.IsNullOrEmpty(requirement.Title) ||
                 string.IsNullOrEmpty(requirement.Content))
             {
-                return new RespEntity() { Code = -1, Message = "传入参数错误" };
+                return new RespEntity() {Code = -1, Message = "传入参数错误"};
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))

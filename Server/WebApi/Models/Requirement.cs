@@ -23,5 +23,6 @@ namespace WebApi.Models
         public string UpdateBy { get; set; }
         public string CreateDate { get; set; }
         public string UpdateDate { get; set; }
+        public List<RequirementTag> RequirementTags { get; set; }
     }
 }

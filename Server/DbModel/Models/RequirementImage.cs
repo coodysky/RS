@@ -56,6 +56,40 @@ namespace DbModel.Models
         }
 
 
+        public static string GetSqlForInsertAndQueryIdentity(RequirementImage requirementimage)
+        {
+            string sql = string.Empty;
+
+            Dictionary<string, string> dicNameValue = new Dictionary<string, string>();
+
+            dicNameValue.Add("RequirementId", requirementimage.RequirementId.ToString());
+            dicNameValue.Add("ImageType", requirementimage.ImageType ?? "");
+            dicNameValue.Add("ImageUrl", requirementimage.ImageUrl ?? "");
+            dicNameValue.Add("CreateBy", requirementimage.CreateBy ?? "");
+            dicNameValue.Add("CreateDate", requirementimage.CreateDate.ToStringDate());
+            dicNameValue.Add("UpdateBy", requirementimage.UpdateBy ?? "");
+            dicNameValue.Add("UpdateDate", requirementimage.UpdateDate.ToStringDate());
+            StringBuilder sql1 = new StringBuilder();
+            StringBuilder sql2 = new StringBuilder();
+            foreach (var nameValue in dicNameValue)
+            {
+                sql1.AppendFormat("[{0}],", nameValue.Key);
+                sql2.AppendFormat("'{0}',", nameValue.Value);
+            }
+            
+            if (!string.IsNullOrEmpty(sql1.ToString()) && !string.IsNullOrEmpty(sql2.ToString()))
+            {
+                sql = "INSERT INTO[RequirementImage](";
+                sql += sql1.ToString().Trim((',')) + ") VALUES(";
+                sql += sql2.ToString().Trim((',')) + ")";
+                sql += "\n";
+                sql += "SELECT  SCOPE_IDENTITY()";
+            }
+            
+            return sql;
+        }
+
+
         public static string GetSqlForSelectByPrimaryKeys(int RequirementImageId)
         {
             return string.Format("SELECT TOP 1 * FROM [RequirementImage] WITH(NOLOCK) WHERE RequirementImageId = N'{0}'", RequirementImageId);
