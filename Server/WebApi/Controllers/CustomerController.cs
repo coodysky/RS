@@ -47,7 +47,7 @@ namespace WebApi.Controllers
         }
         
         [HttpPost]
-        public RespEntity LoadRequirements(List<int> customerIds )
+        public RespEntity LoadCustomers(List<int> customerIds )
         {
             if (customerIds==null || customerIds.Count==0)
             {
