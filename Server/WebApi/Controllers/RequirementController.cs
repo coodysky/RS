@@ -16,6 +16,11 @@ namespace WebApi.Controllers
 {
     public class RequirementController : ApiController
     {
+        /// <summary>
+        /// 创建需求
+        /// </summary>
+        /// <param name="requirement"></param>
+        /// <returns></returns>
         [HttpPost]
         public RespEntity CreateRequirement(Requirement requirement)
         {
@@ -90,6 +95,12 @@ namespace WebApi.Controllers
             }
         }
         
+        /// <summary>
+        /// 通过需求Id获取单个需求
+        /// </summary>
+        /// <param name="requirementId"></param>
+        /// <param name="isNeedTags"></param>
+        /// <returns></returns>
         [HttpPost]
         public RespEntity GetRequirement(int requirementId, bool isNeedTags = false)
         {
@@ -139,6 +150,11 @@ namespace WebApi.Controllers
             }
         }
         
+        /// <summary>
+        /// 响应
+        /// </summary>
+        /// <param name="responseRecord"></param>
+        /// <returns></returns>
         [HttpPost]
         public RespEntity Respond(ResponseRecord responseRecord)
         {
@@ -193,6 +209,12 @@ namespace WebApi.Controllers
             return new RespEntity() { Code = 1, Message = "" };
         }
         
+        /// <summary>
+        /// 通过Title搜索需求，like模糊查询
+        /// </summary>
+        /// <param name="Title"></param>
+        /// <param name="TopN"></param>
+        /// <returns></returns>
         [HttpPost]
         public RespEntity LoadRequirements(string Title, int TopN = 20)
         {
@@ -240,6 +262,13 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// 通过经纬度查询附近多个需求
+        /// </summary>
+        /// <param name="Longitude"></param>
+        /// <param name="Latitude"></param>
+        /// <param name="TopN"></param>
+        /// <returns></returns>
         [HttpPost]
         public RespEntity LoadNearRequirements(decimal Longitude, decimal Latitude,int TopN = 20)
         {
@@ -272,6 +301,11 @@ namespace WebApi.Controllers
             }
         }
 
+        /// <summary>
+        /// 测试
+        /// </summary>
+        /// <param name="title"></param>
+        /// <returns></returns>
         [HttpGet]
         [HttpPost]
         public RespEntity Test(string title)
