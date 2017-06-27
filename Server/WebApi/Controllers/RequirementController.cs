@@ -85,9 +85,9 @@ namespace WebApi.Controllers
                 }
 
                 tran.Commit();
-            }
 
-            return new RespEntity() { Code = 1, Message = "" };
+                return new RespEntity() { Code = 1, Message = "", Requirement = new Requirement() { RequirementId = requirementId } };
+            }
         }
         
         [HttpPost]

@@ -18,6 +18,8 @@ namespace WebApi.Models
         /// </summary>
         public string Message { get; set; }
 
+        public Requirement Requirement;
+
         public List<Requirement> Requirements;
         public List<Customer> Customers;
     }
