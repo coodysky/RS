@@ -60,30 +60,37 @@ namespace WebApi.Controllers
                 string sqlForRequirementInsertAndQueryIdentity = DbModels.Requirement.GetSqlForInsertAndQueryIdentity(modelRequirement);
 
                 //添加事务
+                if (conn.State == ConnectionState.Closed)
+                {
+                    conn.Open();
+                }
                 IDbTransaction tran = conn.BeginTransaction();
 
-                int requirementId = conn.QuerySingle<int>(sqlForRequirementInsertAndQueryIdentity);
+                int requirementId = conn.QuerySingle<int>(sqlForRequirementInsertAndQueryIdentity, transaction: tran);
 
                 if (requirementId > 0)
                 {
                     #region 插入Tag
 
-                    foreach (var tag in requirement.RequirementTags)
+                    if (requirement.RequirementTags != null && requirement.RequirementTags.Count > 0)
                     {
-                        if (string.IsNullOrEmpty(tag.Tag))
-                            continue;
+                        foreach (var tag in requirement.RequirementTags)
+                        {
+                            if (string.IsNullOrEmpty(tag.Tag))
+                                continue;
 
-                        DbModels.RequirementTag modelTag = new DbModels.RequirementTag();
-                        modelTag.RequirementId = requirementId;
-                        modelTag.Tag = tag.Tag;
-                        modelTag.CreateBy = customer.NickName;
-                        modelTag.UpdateBy = customer.NickName;
-                        modelTag.CreateDate = DateTime.Now;
-                        modelTag.UpdateDate = DateTime.Now;
+                            DbModels.RequirementTag modelTag = new DbModels.RequirementTag();
+                            modelTag.RequirementId = requirementId;
+                            modelTag.Tag = tag.Tag;
+                            modelTag.CreateBy = customer.NickName;
+                            modelTag.UpdateBy = customer.NickName;
+                            modelTag.CreateDate = DateTime.Now;
+                            modelTag.UpdateDate = DateTime.Now;
 
-                        string sqlForTagInsert = DbModels.RequirementTag.GetSqlForInsert(modelTag);
+                            string sqlForTagInsert = DbModels.RequirementTag.GetSqlForInsert(modelTag);
 
-                        conn.Execute(sqlForTagInsert);
+                            conn.Execute(sqlForTagInsert, transaction: tran);
+                        }
                     }
 
                     #endregion
