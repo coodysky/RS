@@ -10,25 +10,28 @@ using System.Web.Http;
 using Dapper;
 using DbModel.Extension;
 using WebApi.Models;
+using WebApi.Models.Resp;
 using DbModels=DbModel.Models;
 
 namespace WebApi.Controllers
 {
     public class RequirementController : ApiController
     {
+        #region 接口方法
+
         /// <summary>
         /// 创建需求
         /// </summary>
         /// <param name="requirement"></param>
         /// <returns></returns>
         [HttpPost]
-        public RespEntity CreateRequirement(Requirement requirement)
+        public RespEntityRequirement CreateRequirement(Requirement requirement)
         {
             if (requirement == null || !requirement.CustomerId.HasValue || requirement.CustomerId <= 0 ||
                 string.IsNullOrEmpty(requirement.Title) ||
                 string.IsNullOrEmpty(requirement.Content))
             {
-                return new RespEntity() {Code = -1, Message = "传入参数错误"};
+                return new RespEntityRequirement() { Code = -1, Message = "传入参数错误" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -39,7 +42,7 @@ namespace WebApi.Controllers
 
                 if (customer == null)
                 {
-                    return new RespEntity() { Code = -1, Message = "用户不存在" };
+                    return new RespEntityRequirement() { Code = -1, Message = "用户不存在" };
                 }
 
                 DbModels.Requirement modelRequirement = new DbModels.Requirement();
@@ -98,10 +101,10 @@ namespace WebApi.Controllers
 
                 tran.Commit();
 
-                return new RespEntity() { Code = 1, Message = "", Requirement = new Requirement() { RequirementId = requirementId } };
+                return new RespEntityRequirement() { Code = 1, Message = "", Requirement = new Requirement() { RequirementId = requirementId } };
             }
         }
-        
+
         /// <summary>
         /// 通过需求Id获取单个需求
         /// </summary>
@@ -109,11 +112,11 @@ namespace WebApi.Controllers
         /// <param name="isNeedTags"></param>
         /// <returns></returns>
         [HttpPost]
-        public RespEntity GetRequirement(int requirementId, bool isNeedTags = false)
+        public RespEntityRequirement GetRequirement(int requirementId, bool isNeedTags = false)
         {
             if (requirementId <= 0)
             {
-                return new RespEntity() { Code = -1, Message = "传入参数错误" };
+                return new RespEntityRequirement() { Code = -1, Message = "传入参数错误" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -153,22 +156,22 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return new RespEntity() { Code = 1, Message = "", Requirements = requirements };
+                return new RespEntityRequirement() { Code = 1, Message = "", Requirements = requirements };
             }
         }
-        
+
         /// <summary>
         /// 响应
         /// </summary>
         /// <param name="responseRecord"></param>
         /// <returns></returns>
         [HttpPost]
-        public RespEntity Respond(ResponseRecord responseRecord)
+        public RespEntityRequirement Respond(ResponseRecord responseRecord)
         {
             if (responseRecord == null || responseRecord.RequirementId <= 0 || responseRecord.ResponserId <= 0 ||
                 string.IsNullOrEmpty(responseRecord.Content))
             {
-                return new RespEntity() { Code = -1, Message = "传入参数错误" };
+                return new RespEntityRequirement() { Code = -1, Message = "传入参数错误" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -180,7 +183,7 @@ namespace WebApi.Controllers
 
                 if (responser == null)
                 {
-                    return new RespEntity() { Code = -1, Message = "用户不存在" };
+                    return new RespEntityRequirement() { Code = -1, Message = "用户不存在" };
                 }
 
                 DbModels.Requirement requirement =
@@ -189,12 +192,12 @@ namespace WebApi.Controllers
 
                 if (requirement == null)
                 {
-                    return new RespEntity() { Code = -1, Message = "需求不存在" };
+                    return new RespEntityRequirement() { Code = -1, Message = "需求不存在" };
                 }
 
                 if (requirement.CustomerId == responser.CustomerId)
                 {
-                    return new RespEntity() { Code = -1, Message = "不能响应自己的需求" };
+                    return new RespEntityRequirement() { Code = -1, Message = "不能响应自己的需求" };
                 }
 
                 DbModels.ResponseRecord modelResponseRecord = new DbModels.ResponseRecord();
@@ -213,9 +216,9 @@ namespace WebApi.Controllers
                 conn.Execute(sqlForResponseRecordInsert);
             }
 
-            return new RespEntity() { Code = 1, Message = "" };
+            return new RespEntityRequirement() { Code = 1, Message = "" };
         }
-        
+
         /// <summary>
         /// 通过Title搜索需求，like模糊查询
         /// </summary>
@@ -223,13 +226,13 @@ namespace WebApi.Controllers
         /// <param name="TopN"></param>
         /// <returns></returns>
         [HttpPost]
-        public RespEntity LoadRequirements(string Title, int TopN = 20)
+        public RespEntityRequirement LoadRequirements(string Title, int TopN = 20)
         {
             string title = Title.Trim();
 
             if (string.IsNullOrEmpty(title))
             {
-                return new RespEntity() {Code = -1, Message = "标题为空"};
+                return new RespEntityRequirement() { Code = -1, Message = "标题为空" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -265,7 +268,7 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return new RespEntity() { Code = 1, Message = "", Requirements = requirements };
+                return new RespEntityRequirement() { Code = 1, Message = "", Requirements = requirements };
             }
         }
 
@@ -277,7 +280,7 @@ namespace WebApi.Controllers
         /// <param name="TopN"></param>
         /// <returns></returns>
         [HttpPost]
-        public RespEntity LoadNearRequirements(decimal Longitude, decimal Latitude,int TopN = 20)
+        public RespEntityRequirement LoadNearRequirements(decimal Longitude, decimal Latitude, int TopN = 20)
         {
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
             {
@@ -304,7 +307,7 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return new RespEntity() { Code = 1, Message = "", Requirements = requirements };
+                return new RespEntityRequirement() { Code = 1, Message = "", Requirements = requirements };
             }
         }
 
@@ -315,10 +318,14 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [HttpGet]
         [HttpPost]
-        public RespEntity Test(string title)
+        public RespEntityRequirement Test(string title)
         {
-            return new RespEntity() {Code = 1, Message = title};
+            return new RespEntityRequirement() { Code = 1, Message = title };
         }
+
+        #endregion
+
+        #region build
 
         private Requirement buildApiModelForRequirement(DbModels.Requirement modelRequirement)
         {
@@ -368,5 +375,7 @@ namespace WebApi.Controllers
 
             return tag;
         }
+
+        #endregion
     }
 }

@@ -9,6 +9,7 @@ using System.Web.Http;
 using Dapper;
 using DbModel.Extension;
 using WebApi.Models;
+using WebApi.Models.Resp;
 using DbModels=DbModel.Models;
 
 namespace WebApi.Controllers
@@ -16,13 +17,13 @@ namespace WebApi.Controllers
     public class CustomerController : ApiController
     {
         [HttpPost]
-        public RespEntity CreateCustomer(Customer customer)
+        public RespEntityCustomer CreateCustomer(Customer customer)
         {
             if (customer == null || string.IsNullOrEmpty(customer.NickName) ||
                 string.IsNullOrEmpty(customer.RealName) || string.IsNullOrEmpty(customer.Password) ||
                 string.IsNullOrEmpty(customer.MobilePhone) || string.IsNullOrEmpty(customer.Email))
             {
-                return new RespEntity() { Code = -1, Message = "传入参数错误" };
+                return new RespEntityCustomer() { Code = -1, Message = "传入参数错误" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -43,15 +44,15 @@ namespace WebApi.Controllers
                 conn.Execute(sqlForCustomerInsert);
             }
 
-            return new RespEntity() { Code = 1, Message = "" };
+            return new RespEntityCustomer() { Code = 1, Message = "" };
         }
         
         [HttpPost]
-        public RespEntity LoadCustomers(List<int> customerIds )
+        public RespEntityCustomer LoadCustomers(List<int> customerIds )
         {
             if (customerIds==null || customerIds.Count==0)
             {
-                return new RespEntity() {Code = -1, Message = "标题为空"};
+                return new RespEntityCustomer() {Code = -1, Message = "标题为空"};
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -77,7 +78,7 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return new RespEntity() { Code = 1, Message = "", Customers = customers };
+                return new RespEntityCustomer() { Code = 1, Message = "", Customers = customers };
             }
         }
 

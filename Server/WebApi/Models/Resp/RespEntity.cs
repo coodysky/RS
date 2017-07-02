@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WebApi.Models
+namespace WebApi.Models.Resp
 {
     public class RespEntity
     {
@@ -17,10 +17,5 @@ namespace WebApi.Models
         /// 不过判断成功与否用Code判断
         /// </summary>
         public string Message { get; set; }
-
-        public Requirement Requirement;
-
-        public List<Requirement> Requirements;
-        public List<Customer> Customers;
     }
 }

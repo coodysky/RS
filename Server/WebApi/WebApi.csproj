@@ -149,13 +149,17 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\RequirementController.cs" />
+    <Compile Include="Controllers\ResponseController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\RequirementTag.cs" />
     <Compile Include="Models\Requirement.cs" />
-    <Compile Include="Models\RespEntity.cs" />
+    <Compile Include="Models\Resp\RespEntityCustomer.cs" />
+    <Compile Include="Models\Resp\RespEntityResponseRecord.cs" />
+    <Compile Include="Models\Resp\RespEntityRequirement.cs" />
+    <Compile Include="Models\Resp\RespEntity.cs" />
     <Compile Include="Models\ResponseRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -174,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Response\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DbModel\DbModel.csproj">
@@ -192,7 +197,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>15077</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
