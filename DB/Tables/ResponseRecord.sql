@@ -3,6 +3,8 @@ CREATE TABLE ResponseRecord
     ResponseRecordId INT NOT NULL IDENTITY(1,1) PRIMARY KEY,--主键自增
     RequirementId INT NOT NULL,--需求Id
     ResponserId INT NOT NULL,--响应人Id
+	Title NVARCHAR(50) NOT NULL,--标题
+	Price DECIMAL(18,3) NULL,--金额
     Content NVARCHAR(MAX) NOT NULL,--响应内容
     ContactPhone NVARCHAR(20) NOT NULL,--联系电话
     ContactMan NVARCHAR(50) NOT NULL,--联系人
@@ -32,6 +34,10 @@ GO
 EXEC sp_addextendedproperty N'MS_Description', N'需求Id', 'SCHEMA', N'dbo', 'TABLE', N'ResponseRecord', 'COLUMN', N'RequirementId'
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'响应人Id', 'SCHEMA', N'dbo', 'TABLE', N'ResponseRecord', 'COLUMN', N'ResponserId'
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'标题', 'SCHEMA', N'dbo', 'TABLE', N'ResponseRecord', 'COLUMN', N'Title'
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'金额', 'SCHEMA', N'dbo', 'TABLE', N'ResponseRecord', 'COLUMN', N'Price'
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'响应内容', 'SCHEMA', N'dbo', 'TABLE', N'ResponseRecord', 'COLUMN', N'Content'
 GO

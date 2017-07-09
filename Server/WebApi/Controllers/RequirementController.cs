@@ -48,6 +48,7 @@ namespace WebApi.Controllers
                 DbModels.Requirement modelRequirement = new DbModels.Requirement();
                 modelRequirement.CustomerId = customer.CustomerId;
                 modelRequirement.Title = requirement.Title;
+                modelRequirement.Price = requirement.Price;
                 modelRequirement.Content = requirement.Content;
                 modelRequirement.Address = requirement.Address;
                 modelRequirement.Latitude = requirement.Latitude;
@@ -206,6 +207,8 @@ namespace WebApi.Controllers
                 modelResponseRecord.Content = responseRecord.Content;
                 modelResponseRecord.ContactMan = responseRecord.ContactMan;
                 modelResponseRecord.ContactPhone = responseRecord.ContactPhone;
+                modelResponseRecord.Price = responseRecord.Price;
+                modelResponseRecord.Title = responseRecord.Title;
                 modelResponseRecord.CreateBy = responser.NickName;
                 modelResponseRecord.UpdateBy = responser.NickName;
                 modelResponseRecord.CreateDate = DateTime.Now;
@@ -339,6 +342,7 @@ namespace WebApi.Controllers
                 RequirementId = modelRequirement.RequirementId,
                 CustomerId = modelRequirement.CustomerId,
                 Title = modelRequirement.Title,
+                Price = modelRequirement.Price,
                 Content = modelRequirement.Content,
                 Address = modelRequirement.Address,
                 Longitude = modelRequirement.Longitude,

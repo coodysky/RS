@@ -14,6 +14,7 @@ namespace DbModel.Models
         public int CustomerId { get; set; }
         public string Title { get; set; }
         public string Content { get; set; }
+        public decimal? Price { get; set; }
         public string Address { get; set; }
         public decimal? Longitude { get; set; }
         public decimal? Latitude { get; set; }
@@ -40,6 +41,10 @@ namespace DbModel.Models
             dicNameValue.Add("CustomerId", requirement.CustomerId.ToString());
             dicNameValue.Add("Title", requirement.Title ?? "");
             dicNameValue.Add("Content", requirement.Content ?? "");
+            if (requirement.Price != null)
+            {
+                dicNameValue.Add("Price", requirement.Price.ToString());
+            }
             if (requirement.Address != null)
             {
                 dicNameValue.Add("Address", requirement.Address.ToString());
@@ -97,6 +102,10 @@ namespace DbModel.Models
             dicNameValue.Add("CustomerId", requirement.CustomerId.ToString());
             dicNameValue.Add("Title", requirement.Title ?? "");
             dicNameValue.Add("Content", requirement.Content ?? "");
+            if (requirement.Price != null)
+            {
+                dicNameValue.Add("Price", requirement.Price.ToString());
+            }
             if (requirement.Address != null)
             {
                 dicNameValue.Add("Address", requirement.Address.ToString());
@@ -156,7 +165,7 @@ namespace DbModel.Models
         /// 获得条件查询sql
         /// </summary>
         /// <param name="where">必填，查询条件，不能包含where关键字</param>
-        /// <param name="orderByDic">排序字典，key为排序条件，ke中不能包含asc、desc关键字，value值true为asc，false为desc</param>
+        /// <param name="orderByDic">排序字典，key为排序条件，key中不能包含asc、desc关键字，value值true为asc，false为desc</param>
         /// <param name="topN">查询结果前N条</param>
         /// <returns>返回条件查询的sql</returns>
         public static string GetSqlForSelect(string where,Dictionary<string,bool> orderByDic,int topN)

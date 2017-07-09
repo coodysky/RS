@@ -4,6 +4,7 @@ CREATE TABLE Requirement
 	CustomerId INT NOT NULL,--用户Id
     Title NVARCHAR(50) NOT NULL,--标题
     Content NVARCHAR(MAX) NOT NULL,--内容
+	Price DECIMAL(18,3) NULL,--价格
     Address NVARCHAR(1000) NULL,--需求地址
     Longitude DECIMAL(10,7) NULL,--经度
     Latitude DECIMAL(10,7) NULL,--纬度
@@ -34,6 +35,8 @@ GO
 EXEC sp_addextendedproperty N'MS_Description', N'标题', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'Title'
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'内容', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'Content'
+GO
+EXEC sp_addextendedproperty N'MS_Description', N'价格', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'Price'
 GO
 EXEC sp_addextendedproperty N'MS_Description', N'需求地址', 'SCHEMA', N'dbo', 'TABLE', N'Requirement', 'COLUMN', N'Address'
 GO

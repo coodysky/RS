@@ -11,6 +11,8 @@ namespace WebApi.Models
         public int ResponseRecordId { get; set; }
         public int RequirementId { get; set; }
         public int ResponserId { get; set; }
+        public string Title { get; set; }
+        public decimal? Price { get; set; }
         public string Content { get; set; }
         public string ContactPhone { get; set; }
         public string ContactMan { get; set; }
