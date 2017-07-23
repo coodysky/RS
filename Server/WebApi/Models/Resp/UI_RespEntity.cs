@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WebApi.Models.Resp
 {
-    public class RespEntity
+    public class UI_RespEntity
     {
         /// <summary>
         /// 1:成功，-1:失败

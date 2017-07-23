@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApi.Models.Resp
 {
-    public class RespEntityResponseRecord: RespEntity
+    public class UI_RespEntityResponseRecord : UI_RespEntity
     {
-        public List<ResponseRecord> ResponseRecords;
+        public List<UI_ResponseRecord> ResponseRecords;
     }
 }

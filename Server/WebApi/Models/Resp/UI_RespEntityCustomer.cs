@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace WebApi.Models.Resp
 {
-    public class RespEntityCustomer : RespEntity
+    public class UI_RespEntityCustomer : UI_RespEntity
     {
-        public List<Customer> Customers;
+        public List<UI_Customer> Customers;
     }
 }

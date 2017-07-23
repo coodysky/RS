@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CustomModels\CustomResponseRecord.cs" />
     <Compile Include="Extension\DateExtension.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Requirement.cs" />

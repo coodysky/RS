@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace WebApi.Models
 {
-    public class RequirementTag
+    public class UI_Customer
     {
-        public int? RequirementTagId { get; set; }
-        public int? RequirementId { get; set; }
-        public string Tag { get; set; }
+        public int? CustomerId { get; set; }
+        public string NickName { get; set; }
+        public string RealName { get; set; }
+        public string Password { get; set; }
+        public string MobilePhone { get; set; }
+        public string Email { get; set; }
         public string CreateBy { get; set; }
         public string CreateDate { get; set; }
         public string UpdateBy { get; set; }

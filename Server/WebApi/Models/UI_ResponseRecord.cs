@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace WebApi.Models
 {
-    public class ResponseRecord
+    public class UI_ResponseRecord
     {
         public int ResponseRecordId { get; set; }
         public int RequirementId { get; set; }
+        public string RequirementTitle { get; set; }
         public int ResponserId { get; set; }
         public string Title { get; set; }
         public decimal? Price { get; set; }

@@ -153,14 +153,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\RequirementTag.cs" />
-    <Compile Include="Models\Requirement.cs" />
-    <Compile Include="Models\Resp\RespEntityCustomer.cs" />
-    <Compile Include="Models\Resp\RespEntityResponseRecord.cs" />
-    <Compile Include="Models\Resp\RespEntityRequirement.cs" />
-    <Compile Include="Models\Resp\RespEntity.cs" />
-    <Compile Include="Models\ResponseRecord.cs" />
+    <Compile Include="Models\UI_Customer.cs" />
+    <Compile Include="Models\UI_RequirementTag.cs" />
+    <Compile Include="Models\UI_Requirement.cs" />
+    <Compile Include="Models\Resp\UI_RespEntityCustomer.cs" />
+    <Compile Include="Models\Resp\UI_RespEntityResponseRecord.cs" />
+    <Compile Include="Models\Resp\UI_RespEntityRequirement.cs" />
+    <Compile Include="Models\Resp\UI_RespEntity.cs" />
+    <Compile Include="Models\UI_ResponseRecord.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

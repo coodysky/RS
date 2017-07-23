@@ -17,13 +17,13 @@ namespace WebApi.Controllers
     public class CustomerController : ApiController
     {
         [HttpPost]
-        public RespEntityCustomer CreateCustomer(Customer customer)
+        public UI_RespEntityCustomer CreateCustomer(UI_Customer customer)
         {
             if (customer == null || string.IsNullOrEmpty(customer.NickName) ||
                 string.IsNullOrEmpty(customer.RealName) || string.IsNullOrEmpty(customer.Password) ||
                 string.IsNullOrEmpty(customer.MobilePhone) || string.IsNullOrEmpty(customer.Email))
             {
-                return new RespEntityCustomer() { Code = -1, Message = "传入参数错误" };
+                return new UI_RespEntityCustomer() { Code = -1, Message = "传入参数错误" };
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
@@ -44,20 +44,20 @@ namespace WebApi.Controllers
                 conn.Execute(sqlForCustomerInsert);
             }
 
-            return new RespEntityCustomer() { Code = 1, Message = "" };
+            return new UI_RespEntityCustomer() { Code = 1, Message = "" };
         }
         
         [HttpPost]
-        public RespEntityCustomer LoadCustomers(List<int> customerIds )
+        public UI_RespEntityCustomer LoadCustomers(List<int> customerIds )
         {
             if (customerIds==null || customerIds.Count==0)
             {
-                return new RespEntityCustomer() {Code = -1, Message = "标题为空"};
+                return new UI_RespEntityCustomer() {Code = -1, Message = "标题为空"};
             }
 
             using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
             {
-                List<Customer> customers = null;
+                List<UI_Customer> customers = null;
                 
                 string sqlForSelect = DbModels.Customer.GetSqlForSelect("CustomerId in @CustomerIds", null, 0);
 
@@ -66,7 +66,7 @@ namespace WebApi.Controllers
 
                 if (modelCustomers != null && modelCustomers.Count > 0)
                 {
-                    customers = new List<Customer>();
+                    customers = new List<UI_Customer>();
                     foreach (var modelCustomer in modelCustomers)
                     {
                         var customer = buildFromModel(modelCustomer);
@@ -78,18 +78,18 @@ namespace WebApi.Controllers
                     }
                 }
 
-                return new RespEntityCustomer() { Code = 1, Message = "", Customers = customers };
+                return new UI_RespEntityCustomer() { Code = 1, Message = "", Customers = customers };
             }
         }
 
-        private Customer buildFromModel(DbModels.Customer modelCustomer)
+        private UI_Customer buildFromModel(DbModels.Customer modelCustomer)
         {
             if (modelCustomer == null)
             {
                 return null;
             }
 
-            Customer customer = new Customer()
+            UI_Customer customer = new UI_Customer()
             {
                 CustomerId = modelCustomer.CustomerId,
                 NickName = modelCustomer.NickName,
