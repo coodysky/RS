@@ -7,6 +7,7 @@ using WebApi.Models.ReqResp.Requirement;
 using MySql.Data.MySqlClient;
 using Dapper;
 using System.Data;
+using DbModel.Extension;
 
 namespace WebApi.Controllers
 {
@@ -165,113 +166,184 @@ insert into RequirementTag
             }
         }
 
-        ///// <summary>
-        ///// 通过需求Id获取单个需求
-        ///// </summary>
-        ///// <param name="requirementId"></param>
-        ///// <param name="isNeedTags"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public UI_RespEntityRequirement GetRequirement(int requirementId, bool isNeedTags = false)
-        //{
-        //    if (requirementId <= 0)
-        //    {
-        //        return new UI_RespEntityRequirement() { Code = -1, Message = "传入参数错误" };
-        //    }
+        /// <summary>
+        /// 通过需求Id获取单个需求
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Resp_GetRequirementById GetRequirementById(Req_GetRequirementById req)
+        {
+            if (req == null || req.RequirementId <= 0)
+            {
+                return new Resp_GetRequirementById() { Code = -1, Message = "传入参数错误" };
+            }
 
-        //    using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
-        //    {
-        //        List<UI_Requirement> requirements = null;
+            Resp_GetRequirementById resp = new Resp_GetRequirementById();
 
-        //        DbModels.Requirement modelRequirement =
-        //            conn.Query<DbModels.Requirement>(DbModels.Requirement.GetSqlForSelectByPrimaryKeys(requirementId))
-        //                .FirstOrDefault();
+            using (var conn = new MySqlConnection(connMysql))
+            {
+                #region sqlRequirement
 
-        //        if (modelRequirement != null)
-        //        {
-        //            requirements = new List<UI_Requirement>();
+                string sqlRequirement = @"
+select 
+    RequirementId,
+    CustomerId,
+    Title,
+    Content,
+    Price,
+    Address,
+    Longitude,
+    Latitude,
+    ContactPhone,
+    ContactMan,
+    RequirementStatusCode,
+    ReleaseDate,
+    CreateBy,
+    UpdateBy,
+    CreateDate,
+    UpdateDate
+from Requirement
+where RequirementId = @RequirementId
+";
 
-        //            var requirement = buildApiModelForRequirement(modelRequirement);
-        //            if (requirement != null)
-        //            {
-        //                List<DbModels.RequirementTag> modelTags =
-        //                conn.Query<DbModels.RequirementTag>(
-        //                    DbModels.RequirementTag.GetSqlForSelect(
-        //                        string.Format("RequirementId = {0}", requirementId), null, 0)).ToList();
+                #endregion
 
-        //                List<UI_RequirementTag> tags = new List<UI_RequirementTag>();
-        //                foreach (var modelTag in modelTags)
-        //                {
-        //                    UI_RequirementTag tag = buildApiModelForRequirementTag(modelTag);
-        //                    if (tag != null)
-        //                    {
-        //                        tags.Add(tag);
-        //                    }
-        //                }
+                var dbRequirement = conn.Query<DbModel.Models.Requirement>(sqlRequirement, new
+                {
+                    RequirementId = req.RequirementId
+                }).FirstOrDefault();
 
-        //                if (tags != null && tags.Count > 0)
-        //                    requirement.RequirementTags = tags;
+                if (dbRequirement != null)
+                {
+                    var requirement = buildRespEntity(dbRequirement);
+                    if (requirement != null && req.IsNeedTags)
+                    {
+                        #region sqlRequirementTag
 
-        //                requirements.Add(requirement);
-        //            }
-        //        }
+                        string sqlRequirementTag = @"
+select Tag
+from RequirementTag
+where RequirementId = @RequirementId
+";
 
-        //        return new UI_RespEntityRequirement() { Code = 1, Message = "", Requirements = requirements };
-        //    }
-        //}
+                        #endregion
+                        
+                        var tags = conn.Query<string>(sqlRequirementTag, new
+                        {
+                            RequirementId = req.RequirementId
+                        }).ToList();
 
-        ///// <summary>
-        ///// 通过Title搜索需求，like模糊查询
-        ///// </summary>
-        ///// <param name="Title"></param>
-        ///// <param name="TopN"></param>
-        ///// <returns></returns>
-        //[HttpPost]
-        //public UI_RespEntityRequirement LoadRequirements(string Title, int TopN = 20)
-        //{
-        //    string title = Title.Trim();
+                        if (tags != null && tags.Count > 0)
+                        {
+                            requirement.Tags = tags;
+                        }
 
-        //    if (string.IsNullOrEmpty(title))
-        //    {
-        //        return new UI_RespEntityRequirement() { Code = -1, Message = "标题为空" };
-        //    }
+                        resp.Requirement = requirement;
+                    }
+                }
 
-        //    using (var conn = new SqlConnection(ConfigurationManager.ConnectionStrings["MsSqlCon"].ConnectionString))
-        //    {
-        //        List<UI_Requirement> requirements = null;
+                return resp;
+            }
+        }
 
-        //        string where = "1=1";
+        /// <summary>
+        /// 通过Title搜索需求，like模糊查询
+        /// </summary>
+        /// <param name="req"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public Resp_LoadRequirementsByTitle LoadRequirementsByTitle(Req_LoadRequirementsByTitle req)
+        {
+            string titleInput = req.Title.Trim();
 
-        //        if (!string.IsNullOrEmpty(title.Trim()))
-        //        {
-        //            where += string.Format(" AND Title LIKE N'{0}'", title);
-        //        }
+            if (string.IsNullOrEmpty(titleInput))
+            {
+                return new Resp_LoadRequirementsByTitle() { Code = -1, Message = "标题为空" };
+            }
 
-        //        Dictionary<string, bool> orderByDic = new Dictionary<string, bool>();
-        //        orderByDic.Add("RequirementId", false);
+            Resp_LoadRequirementsByTitle resp = new Resp_LoadRequirementsByTitle();
 
-        //        string sqlForSelect = DbModels.Requirement.GetSqlForSelect(where, orderByDic, TopN);
+            using (var conn = new MySqlConnection(connMysql))
+            {
+                #region sql
 
-        //        List<DbModels.Requirement> modelRequirements = conn.Query<DbModels.Requirement>(sqlForSelect).ToList();
+                string sql = @"
+create temporary table temp_requirement_ids
+(     
+    requirement_id int NOT NULL   
+);
 
+insert into temp_requirement_ids
+(
+    requirement_id
+)
+select 
+    RequirementId
+from Requirement
+where Title like @Title;
 
-        //        if (modelRequirements != null && modelRequirements.Count > 0)
-        //        {
-        //            requirements = new List<UI_Requirement>();
-        //            foreach (var modelRequirement in modelRequirements)
-        //            {
-        //                var requirement = buildApiModelForRequirement(modelRequirement);
+select
+    RequirementId,
+    CustomerId,
+    Title,
+    Content,
+    Price,
+    Address,
+    Longitude,
+    Latitude,
+    ContactPhone,
+    ContactMan,
+    RequirementStatusCode,
+    ReleaseDate,
+    CreateBy,
+    UpdateBy,
+    CreateDate,
+    UpdateDate
+from Requirement r
+inner join temp_requirement_ids ris on r.RequirementId = ris.requirement_id;
 
-        //                if (requirement != null)
-        //                {
-        //                    requirements.Add(requirement);
-        //                }
-        //            }
-        //        }
+select
+    rt.RequirementId,
+    rt.Tag
+from Requirement r
+inner join temp_requirement_ids ris on r.RequirementId = ris.requirement_id
+inner join RequirementTag rt on r.RequirementId = rt.RequirementId;
+";
 
-        //        return new UI_RespEntityRequirement() { Code = 1, Message = "", Requirements = requirements };
-        //    }
-        //}
+                #endregion
+
+                var result = conn.QueryMultiple(sql, new { Title = titleInput });
+
+                var dbRequirements = result.Read<DbModel.Models.Requirement>().ToList();
+                var dbTags = result.Read<DbModel.Models.RequirementTag>().ToList();
+
+                if (dbRequirements != null && dbRequirements.Count > 0)
+                {
+                    foreach (var dbRequirement in dbRequirements)
+                    {
+                        var respRequirement = buildRespEntity(dbRequirement);
+                        if (respRequirement != null)
+                        {
+                            if (dbTags != null && dbTags.Count > 0)
+                            {
+                                foreach (var dbTag in dbTags)
+                                {
+                                    if (dbTag.RequirementId == respRequirement.RequirementId)
+                                    {
+                                        respRequirement.Tags.Add(dbTag.Tag);
+                                    }
+                                }
+                            }
+
+                            resp.Requirements.Add(respRequirement);
+                        }
+                    }
+                }
+
+                return resp;
+            }
+        }
 
         ///// <summary>
         ///// 通过经纬度查询附近多个需求
@@ -316,34 +388,34 @@ insert into RequirementTag
 
         #region build
 
-        //private UI_Requirement buildApiModelForRequirement(DbModels.Requirement modelRequirement)
-        //{
-        //    if (modelRequirement == null)
-        //    {
-        //        return null;
-        //    }
+        private RespEntity_Requirement buildRespEntity(DbModel.Models.Requirement dbRequirement)
+        {
+            if (dbRequirement == null)
+            {
+                return null;
+            }
 
-        //    UI_Requirement requirement = new UI_Requirement()
-        //    {
-        //        RequirementId = modelRequirement.RequirementId,
-        //        CustomerId = modelRequirement.CustomerId,
-        //        Title = modelRequirement.Title,
-        //        Price = modelRequirement.Price,
-        //        Content = modelRequirement.Content,
-        //        Address = modelRequirement.Address,
-        //        Longitude = modelRequirement.Longitude,
-        //        Latitude = modelRequirement.Latitude,
-        //        ContactPhone = modelRequirement.ContactPhone,
-        //        ContactMan = modelRequirement.ContactMan,
-        //        ReleaseDate = modelRequirement.ReleaseDate.ToStringDate(),
-        //        CreateBy = modelRequirement.CreateBy,
-        //        UpdateBy = modelRequirement.UpdateBy,
-        //        CreateDate = modelRequirement.CreateDate.ToStringDate(),
-        //        UpdateDate = modelRequirement.UpdateDate.ToStringDate()
-        //    };
+            RespEntity_Requirement respRequirement = new RespEntity_Requirement()
+            {
+                RequirementId = dbRequirement.RequirementId,
+                CustomerId = dbRequirement.CustomerId,
+                Title = dbRequirement.Title,
+                Price = dbRequirement.Price,
+                Content = dbRequirement.Content,
+                Address = dbRequirement.Address,
+                Longitude = dbRequirement.Longitude,
+                Latitude = dbRequirement.Latitude,
+                ContactPhone = dbRequirement.ContactPhone,
+                ContactMan = dbRequirement.ContactMan,
+                ReleaseDate = dbRequirement.ReleaseDate.ToStringDateFromLong(),
+                CreateBy = dbRequirement.CreateBy,
+                UpdateBy = dbRequirement.UpdateBy,
+                CreateDate = dbRequirement.CreateDate.ToStringDateFromLong(),
+                UpdateDate = dbRequirement.UpdateDate.ToStringDateFromLong()
+            };
 
-        //    return requirement;
-        //}
+            return respRequirement;
+        }
 
         //private UI_RequirementTag buildApiModelForRequirementTag(DbModels.RequirementTag modelTag)
         //{

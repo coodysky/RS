@@ -127,7 +127,9 @@ from Customer where CustomerId in @CustomerIds
         }
 
         #endregion
-        
+
+        #region build
+
         private RespEntity_Customer buildRespEntity(Customer dbCustomer)
         {
             if (dbCustomer == null)
@@ -151,5 +153,8 @@ from Customer where CustomerId in @CustomerIds
 
             return respCustomer;
         }
+
+        #endregion
+
     }
 }

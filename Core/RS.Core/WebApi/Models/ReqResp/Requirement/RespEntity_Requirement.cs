@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using DbModel.Extension;
+using System.Threading.Tasks;
 
-namespace DbModel.Models
+namespace WebApi.Models.ReqResp.Requirement
 {
-    public class Requirement
+    public class RespEntity_Requirement
     {
-        #region 属性
-
         public int RequirementId { get; set; }
         public int CustomerId { get; set; }
         public string Title { get; set; }
@@ -21,12 +18,12 @@ namespace DbModel.Models
         public string ContactPhone { get; set; }
         public string ContactMan { get; set; }
         public string RequirementStatusCode { get; set; }
-        public long? ReleaseDate { get; set; }
+        public string ReleaseDate { get; set; }
         public string CreateBy { get; set; }
         public string UpdateBy { get; set; }
-        public long CreateDate { get; set; }
-        public long UpdateDate { get; set; }
+        public string CreateDate { get; set; }
+        public string UpdateDate { get; set; }
 
-        #endregion
+        public List<string> Tags { get; set; } = new List<string>();
     }
 }
