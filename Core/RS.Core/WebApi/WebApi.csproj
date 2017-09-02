@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Models\ReqResp\Response\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

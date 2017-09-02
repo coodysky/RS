@@ -21,9 +21,9 @@ namespace DbModel.Models
         public bool IsDeleted { get; set; }
         public bool IsFinalServeRecord { get; set; }
         public string CreateBy { get; set; }
-        public DateTime CreateDate { get; set; }
+        public long CreateDate { get; set; }
         public string UpdateBy { get; set; }
-        public DateTime UpdateDate { get; set; }
+        public long UpdateDate { get; set; }
 
         #endregion
     }
