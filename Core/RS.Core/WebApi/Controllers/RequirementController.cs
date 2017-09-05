@@ -14,7 +14,7 @@ namespace WebApi.Controllers
     [Route("api/[controller]")]
     public class RequirementController : Controller
     {
-        string connMysql = "读取数据库连接字符串";
+        string connMysql = Startup.Configuration["ConnectionStrings:Mysql"];
 
         #region 接口方法
 
