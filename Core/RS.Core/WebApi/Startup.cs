@@ -38,7 +38,10 @@ namespace WebApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseMvc();
+            app.UseMvc(routes =>
+            {
+                routes.MapRoute("default", "api/{controller=Home}/{action=Index}/{id?}");
+            });
         }
     }
 }

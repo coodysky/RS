@@ -11,7 +11,6 @@ using DbModel.Extension;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
     public class ResponseController : Controller
     {
         string connMysql = Startup.Configuration["ConnectionStrings:Mysql"];
