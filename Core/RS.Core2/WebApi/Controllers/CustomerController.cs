@@ -11,7 +11,7 @@ namespace WebApi.Controllers
 {
     public class CustomerController : Controller
     {
-        string connMysql = Startup.Configuration["ConnectionStrings:Mysql"];
+        string connMysql = Startup.ConfigAppsetting["ConnectionStrings:Mysql"];
 
         #region 接口方法
 

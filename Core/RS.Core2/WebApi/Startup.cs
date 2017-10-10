@@ -13,12 +13,13 @@ namespace WebApi
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+        public static IConfigurationRoot ConfigAppsetting { get; private set; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public static IConfiguration Configuration { get; private set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -29,6 +30,9 @@ namespace WebApi
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            //配置AppSetting
+            SetAppSettingConfig(env);
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -38,6 +42,14 @@ namespace WebApi
             {
                 routes.MapRoute("default", "api/{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private void SetAppSettingConfig(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(env.ContentRootPath)
+                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+            ConfigAppsetting = builder.Build();
         }
     }
 }
